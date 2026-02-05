@@ -1,5 +1,6 @@
 import { View, Text, Image } from "react-native";
 import { forecastStyles } from "../../style";
+import { Fragment } from "react";
 
 const TodaysForecast = () => {
   return (
@@ -9,7 +10,7 @@ const TodaysForecast = () => {
       </View>
       <View style={forecastStyles.todaysForecastRow}>
         {Array.from({ length: 3 }).map((_, index) => (
-          <>
+          <Fragment key={`todays-forecast-${index}`}>
             {index === 1 && (
               <View style={forecastStyles.singleForecastLine}></View>
             )}
@@ -34,7 +35,7 @@ const TodaysForecast = () => {
             {index === 1 && (
               <View style={forecastStyles.singleForecastLine}></View>
             )}
-          </>
+          </Fragment>
         ))}
       </View>
     </View>

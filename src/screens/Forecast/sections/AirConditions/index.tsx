@@ -3,15 +3,14 @@ import { forecastStyles } from "../../style";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import Ionicons from "@expo/vector-icons/Ionicons";
-import { JSX } from "react";
 import { secondary_text_color } from "@/constants/colors";
+import { NavigationProp, useNavigation } from "@react-navigation/native";
+import { AirConditionData, RootStackParamList } from "@/types";
 
 const Airconditions = () => {
-  const airConditionData: {
-    title: string;
-    icon: JSX.Element;
-    value: string;
-  }[] = [
+  const { navigate } = useNavigation<NavigationProp<RootStackParamList>>();
+
+  const airConditionData: AirConditionData[] = [
     {
       title: "Real feel",
       icon: (
@@ -52,7 +51,10 @@ const Airconditions = () => {
         <Text style={forecastStyles.airconditionsHeadingTItle}>
           AIR CONDITIONS
         </Text>
-        <Pressable style={forecastStyles.airconditionsSeemoreBtn}>
+        <Pressable
+          style={forecastStyles.airconditionsSeemoreBtn}
+          onPress={() => navigate("AirConditions")}
+        >
           <Text style={forecastStyles.airconditionsSeemoreText}>See more</Text>
         </Pressable>
       </View>

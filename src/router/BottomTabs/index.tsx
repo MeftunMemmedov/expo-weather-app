@@ -2,10 +2,9 @@ import {
   BottomTabNavigationOptions,
   createBottomTabNavigator,
 } from "@react-navigation/bottom-tabs";
-import { ForecastStack } from "../Stack";
+import { CityStack, ForecastStack } from "../Stack";
 import { StyleSheet } from "react-native";
-import { secondary_color, secondary_text_color } from "@/constants/colors";
-import Countries from "@/screens/Countries";
+import { primary_color, secondary_color, secondary_text_color } from "@/constants/colors";
 import FontAwesome5 from "@expo/vector-icons/FontAwesome5";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import Ionicons from "@expo/vector-icons/Ionicons";
@@ -37,8 +36,8 @@ const BottomTabsNavigator = () => {
         }}
       />
       <Tab.Screen
-        name="Countries"
-        component={Countries}
+        name="CityStack"
+        component={CityStack}
         options={{
           tabBarIcon: ({ color }) => (
             <FontAwesome name="list-ul" size={24} color={color} />
@@ -65,5 +64,7 @@ const styles = StyleSheet.create({
   tabBarStyle: {
     height: 70,
     backgroundColor: secondary_color,
+    outlineColor:primary_color,
+    borderColor:primary_color
   },
 });

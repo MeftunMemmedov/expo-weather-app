@@ -12,38 +12,6 @@ const { width } = Dimensions.get("screen");
 const isTablet = width >= 768;
 
 export const forecastStyles = StyleSheet.create({
-  // topsection
-  topSection: {
-    flexDirection: "column",
-    alignItems: "center",
-    gap: 30,
-    paddingTop: 30,
-  },
-  topInfoTextBox: {
-    flexDirection: "column",
-    alignItems: "center",
-  },
-  countryName: {
-    fontSize: 40,
-    fontWeight: "bold",
-    color: "white",
-  },
-  chanceOfRainText: {
-    fontSize: 20,
-    color: secondary_text_color,
-  },
-  weatherIconBox: {
-    aspectRatio: "16/10",
-    width: isTablet ? "60%" : "100%",
-    flexDirection: "row",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  weatherDegree: {
-    fontSize: 60,
-    fontWeight: "bold",
-    color: "white",
-  },
   //   today's forecast
   todaysForecastContainer: {
     width: "100%",

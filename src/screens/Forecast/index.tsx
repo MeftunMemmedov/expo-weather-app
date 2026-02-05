@@ -1,9 +1,9 @@
 import Container from "@/components/Container";
-import TopInfo from "./sections/TopInfo";
 import TodaysForecast from "./sections/TodaysForecast";
 import { View } from "react-native";
 import WeeklyForecast from "./sections/WeeklyForecast";
 import Airconditions from "./sections/AirConditions";
+import TopInfo from "@/components/TopInfo";
 
 const Forecast = () => {
   return (
