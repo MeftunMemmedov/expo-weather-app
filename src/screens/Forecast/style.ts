@@ -83,11 +83,14 @@ export const forecastStyles = StyleSheet.create({
   singleWeeklyForecastDay: {
     fontSize: 18,
     color: secondary_text_color,
+    width: "30%",
   },
   singleWeeklyForecastWeather: {
     flexDirection: "row",
+    justifyContent: "center",
     alignItems: "center",
-    gap: 20,
+    gap: 5,
+    width: "50%",
   },
   singleWeeklyForecastWeatherIconBox: {
     width: 35,
@@ -98,13 +101,14 @@ export const forecastStyles = StyleSheet.create({
   },
   singleWeeklyForecastWeatherTitle: {
     fontWeight: "bold",
-    fontSize: 18,
     color: primary_text_color,
   },
   singleWeeklyForecastWeatherInterval: {
     fontWeight: "bold",
-    fontSize: 16,
+    // fontSize: 15,
     color: primary_text_color,
+    width: "20%",
+    textAlign: "right",
   },
   // air conditions
   airconditionsContainer: {

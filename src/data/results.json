@@ -1,0 +1,47 @@
+[
+  {
+    "id": 2801268,
+    "name": "London",
+    "region": "City of London, Greater London",
+    "country": "United Kingdom",
+    "lat": 51.52,
+    "lon": -0.11,
+    "url": "london-city-of-london-greater-london-united-kingdom"
+  },
+  {
+    "id": 2548753,
+    "name": "Long Beach",
+    "region": "California",
+    "country": "United States of America",
+    "lat": 33.77,
+    "lon": -118.19,
+    "url": "long-beach-california-united-states-of-america"
+  },
+  {
+    "id": 1122649,
+    "name": "Loni",
+    "region": "Uttar Pradesh",
+    "country": "India",
+    "lat": 28.75,
+    "lon": 77.28,
+    "url": "loni-uttar-pradesh-india"
+  },
+  {
+    "id": 437523,
+    "name": "Longfeng",
+    "region": "Heilongjiang",
+    "country": "China",
+    "lat": 46.55,
+    "lon": 125.12,
+    "url": "longfeng-heilongjiang-china"
+  },
+  {
+    "id": 794849,
+    "name": "Longjumeau",
+    "region": "Ile-de-France",
+    "country": "France",
+    "lat": 48.7,
+    "lon": 2.3,
+    "url": "longjumeau-ile-de-france-france"
+  }
+]

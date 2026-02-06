@@ -3,40 +3,47 @@ import TopInfo from "@/components/TopInfo";
 import { AirConditionData } from "@/types";
 import { View, Text } from "react-native";
 import { styles } from "./style";
+import { current, forecast } from "@/data";
+import { getChancheOfRain, getFixedTemp } from "@/helpers/common";
+import { useSettings } from "@/hooks";
 
 const AirConditionDetails = () => {
+  const { getSetting } = useSettings();
+  const tempSetting = getSetting("TEMPRATURE");
+  const chance_of_rain = getChancheOfRain(forecast.forecast.forecastday);
+
   const airConditionData: AirConditionData[] = [
     {
       title: "UV INDEX",
-      value: "3",
+      value: current.current.uv.toFixed().toString(),
     },
     {
       title: "WIND",
-      value: "0.2 km/h",
+      value: `${current.current.wind_kph} km/h`,
     },
     {
       title: "HUMIDITY",
-      value: "56%",
+      value: `${current.current.humidity}%`,
     },
     {
       title: "VISIBILITY",
-      value: "12 km",
+      value: `${current.current.vis_km} km`,
     },
     {
       title: "FEELS LIKE",
-      value: "30°",
+      value: `${tempSetting?.selected === "Celsius" ? getFixedTemp(current.current.feelslike_c) : getFixedTemp(current.current.feelslike_f)}`,
     },
     {
       title: "CHANCE OF RAIN",
-      value: "0%",
+      value: `${chance_of_rain}%`,
     },
     {
       title: "PRESSURE",
-      value: "1008 hPa",
+      value: `${current.current.pressure_mb} hPa`,
     },
     {
       title: "SUNSET",
-      value: "20:58",
+      value: `${forecast.forecast.forecastday[0].astro.sunset}`,
     },
   ];
   return (
@@ -44,9 +51,16 @@ const AirConditionDetails = () => {
       <TopInfo />
       <View style={styles.airconditionsRow}>
         {airConditionData.map((aircondition, index) => (
-          <View key={`air-condition-detail-${index}`} style={styles.singleAircondition}>
-            <Text style={styles.singleAirconditionTitle}>{aircondition.title}</Text>
-            <Text style={styles.singleAirconditionValue}>{aircondition.value}</Text>
+          <View
+            key={`air-condition-detail-${index}`}
+            style={styles.singleAircondition}
+          >
+            <Text style={styles.singleAirconditionTitle}>
+              {aircondition.title}
+            </Text>
+            <Text style={styles.singleAirconditionValue}>
+              {aircondition.value}
+            </Text>
           </View>
         ))}
       </View>

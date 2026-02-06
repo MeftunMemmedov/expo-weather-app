@@ -6,9 +6,17 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { secondary_text_color } from "@/constants/colors";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { AirConditionData, RootStackParamList } from "@/types";
+import { current, forecast } from "@/data";
+import { useSettings } from "@/hooks";
+import { getChancheOfRain, getFixedTemp } from "@/helpers/common";
 
 const Airconditions = () => {
+  const { getSetting } = useSettings();
+
+  const tempSetting = getSetting("TEMPRATURE");
   const { navigate } = useNavigation<NavigationProp<RootStackParamList>>();
+
+  const chance_of_rain = getChancheOfRain(forecast.forecast.forecastday);
 
   const airConditionData: AirConditionData[] = [
     {
@@ -20,12 +28,12 @@ const Airconditions = () => {
           color={secondary_text_color}
         />
       ),
-      value: "30°",
+      value: `${tempSetting?.selected === "Celsius" ? getFixedTemp(current.current.temp_c) : getFixedTemp(current.current.temp_f)}`,
     },
     {
       title: "Wind",
       icon: <FontAwesome5 name="wind" size={24} color={secondary_text_color} />,
-      value: "0.2 km/h",
+      value: `${current.current.wind_kph} km/h`,
     },
     {
       title: "Chance of rain",
@@ -37,12 +45,12 @@ const Airconditions = () => {
           color={secondary_text_color}
         />
       ),
-      value: "0%",
+      value: `${chance_of_rain}%`,
     },
     {
       title: "UV index",
       icon: <FontAwesome5 name="sun" size={24} color={secondary_text_color} />,
-      value: "3",
+      value: current.current.uv.toFixed().toString(),
     },
   ];
   return (

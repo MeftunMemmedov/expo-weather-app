@@ -49,7 +49,7 @@ export const searchStyles = StyleSheet.create({
     objectFit: "contain",
   },
   singleResultInfoBox: {
-    width: "80%",
+    width: "100%",
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",

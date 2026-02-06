@@ -1,25 +1,31 @@
 import { secondary_text_color } from "@/constants/colors";
+import { current } from "@/data";
+import { getFixedTemp } from "@/helpers/common";
+import { useSettings } from "@/hooks";
 import { View, Text, Image, StyleSheet, Dimensions } from "react-native";
 
 const TopInfo = () => {
+  const { getSetting } = useSettings();
+  const tempSetting = getSetting("TEMPRATURE");
   return (
     <View style={styles.topSection}>
       <View style={styles.topInfoTextBox}>
-        <Text style={styles.countryName}>Madrid</Text>
-        <Text style={styles.chanceOfRainText}>Chance of rain: 0%</Text>
+        <Text style={styles.countryName}>{current.location.name}</Text>
+        <Text style={styles.chanceOfRainText}>
+          {current.current.condition.text}
+        </Text>
       </View>
       <View style={styles.weatherIconBox}>
         <Image
-          source={require("@/assets/images/sun.png")}
-          style={{
-            width: "100%",
-            height: "100%",
-            aspectRatio: "16/10",
-            objectFit: "contain",
-          }}
+          source={{ uri: `https:${current.current.condition.icon}` }}
+          style={styles.weatherIcon}
         />
       </View>
-      <Text style={styles.weatherDegree}>31°</Text>
+      <Text style={styles.weatherDegree}>
+        {tempSetting?.selected === "Celsius"
+          ? getFixedTemp(current.current.temp_c)
+          : getFixedTemp(current.current.temp_f)}
+      </Text>
     </View>
   );
 };
@@ -56,6 +62,12 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
+  },
+  weatherIcon: {
+    width: "100%",
+    height: "100%",
+    aspectRatio: "16/10",
+    objectFit: "contain",
   },
   weatherDegree: {
     fontSize: 60,
