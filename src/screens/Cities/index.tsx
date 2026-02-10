@@ -5,18 +5,22 @@ import { SwipeListView } from "react-native-swipe-list-view";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/types";
-import { useLocalData } from "@/hooks";
-import { useCallback, useEffect } from "react";
+import { useEffect } from "react";
 import { useFocusEffect } from "@react-navigation/native";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { getCitiesFromStorage } from "@/store/city/actions";
 
 const Cities = ({ navigation }: NativeStackScreenProps<RootStackParamList>) => {
-  const { cities, getCities, removeCity, isLoading } = useLocalData();
-  //TEXT
-  useFocusEffect(
-    useCallback(() => {
-      getCities();
-    }, []),
+  const dispatch = useAppDispatch();
+  const { isLoading, savedCities, currentCity } = useAppSelector(
+    (store) => store.city,
   );
+
+  useEffect(() => {
+    if (currentCity == null) {
+      dispatch(getCitiesFromStorage());
+    }
+  }, [currentCity]);
   return (
     <Container scroll>
       <View style={citiesStyles.mainContainer}>
@@ -31,14 +35,14 @@ const Cities = ({ navigation }: NativeStackScreenProps<RootStackParamList>) => {
           <View>
             <Text style={{ color: "white" }}>LOADING//</Text>
           </View>
-        ) : cities?.length === 0 ? (
+        ) : savedCities?.length === 0 ? (
           <View>
             <Text style={{ color: "white" }}>No City Found</Text>
           </View>
         ) : (
           <View>
             <SwipeListView
-              data={cities}
+              data={savedCities}
               renderItem={(data) => (
                 <View style={citiesStyles.singleCityItem}>
                   <View style={citiesStyles.singleCityLeftSide}>
@@ -58,7 +62,7 @@ const Cities = ({ navigation }: NativeStackScreenProps<RootStackParamList>) => {
                 <View style={citiesStyles.singleCityHiddenBg}>
                   <Pressable
                     style={citiesStyles.singleCityHiddenBgBtn}
-                    onPress={() => removeCity(data.item.lat, data.item.lon)}
+                    // onPress={() => removeCity(data.item.lat, data.item.lon)}
                   >
                     <FontAwesome name="close" size={30} color="white" />
                   </Pressable>
