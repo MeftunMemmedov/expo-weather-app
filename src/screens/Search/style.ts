@@ -20,6 +20,7 @@ export const searchStyles = StyleSheet.create({
     borderRadius: 10,
     height: 45,
     paddingHorizontal: 10,
+    color:'white'
   },
   cancelSearchBtn: {
     width: "20%",

@@ -18,7 +18,7 @@ const initialState: CityState = {
   isLoading: false,
 };
 
-export const citySlice = createSlice({
+const citySlice = createSlice({
   name: "city",
   initialState,
   reducers: {},

@@ -3,13 +3,19 @@ import TopInfo from "@/components/TopInfo";
 import { AirConditionData } from "@/types";
 import { View, Text } from "react-native";
 import { styles } from "./style";
-import { current, forecast } from "@/data";
 import { getChancheOfRain, getFixedTemp } from "@/helpers/common";
 import { useSettings } from "@/hooks";
+import { useAppSelector } from "@/store/hooks";
 
 const AirConditionDetails = () => {
   const { getSetting } = useSettings();
   const tempSetting = getSetting("TEMPRATURE");
+
+  const { forecast, currentWeather: current } = useAppSelector(
+    (store) => store.weather,
+  );
+  if (forecast == null || current == null) return;
+
   const chance_of_rain = getChancheOfRain(forecast.forecast.forecastday);
 
   const airConditionData: AirConditionData[] = [

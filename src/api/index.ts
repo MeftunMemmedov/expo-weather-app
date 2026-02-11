@@ -7,6 +7,7 @@ const axiosInstance = axios.create({
   baseURL,
   params: {
     key: apikey,
+    aqi: "yes",
   },
 });
 

@@ -6,9 +6,9 @@ import Ionicons from "@expo/vector-icons/Ionicons";
 import { secondary_text_color } from "@/constants/colors";
 import { NavigationProp, useNavigation } from "@react-navigation/native";
 import { AirConditionData, RootStackParamList } from "@/types";
-import { current, forecast } from "@/data";
 import { useSettings } from "@/hooks";
 import { getChancheOfRain, getFixedTemp } from "@/helpers/common";
+import { useAppSelector } from "@/store/hooks";
 
 const Airconditions = () => {
   const { getSetting } = useSettings();
@@ -16,7 +16,15 @@ const Airconditions = () => {
   const tempSetting = getSetting("TEMPRATURE");
   const { navigate } = useNavigation<NavigationProp<RootStackParamList>>();
 
-  const chance_of_rain = getChancheOfRain(forecast.forecast.forecastday);
+  const { currentWeather: current, forecast } = useAppSelector(
+    (store) => store.weather,
+  );
+
+  const chance_of_rain = forecast
+    ? getChancheOfRain(forecast.forecast.forecastday)
+    : null;
+
+  if (current == null || forecast == null) return null;
 
   const airConditionData: AirConditionData[] = [
     {
@@ -53,6 +61,7 @@ const Airconditions = () => {
       value: current.current.uv.toFixed().toString(),
     },
   ];
+
   return (
     <View style={forecastStyles.airconditionsContainer}>
       <View style={forecastStyles.airconditionsHeadingBox}>

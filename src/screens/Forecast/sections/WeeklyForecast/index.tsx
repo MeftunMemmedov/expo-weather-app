@@ -1,13 +1,15 @@
 import { View, Text, Image } from "react-native";
 import { forecastStyles } from "../../style";
-import { forecast } from "@/data";
 import { format, fromUnixTime, isToday, isTomorrow } from "date-fns";
 import { useSettings } from "@/hooks";
+import { useAppSelector } from "@/store/hooks";
 
 const WeeklyForecast = () => {
   const { getSetting } = useSettings();
 
   const tempSetting = getSetting("TEMPRATURE");
+
+  const { forecast } = useAppSelector((store) => store.weather);
 
   const getDayLabel = (epoch: number) => {
     const date = fromUnixTime(epoch);
@@ -16,6 +18,8 @@ const WeeklyForecast = () => {
 
     return format(date, "EEEE");
   };
+
+  if (forecast == null) return null;
 
   return (
     <View style={forecastStyles.weeklyForecastContainer}>
@@ -48,7 +52,7 @@ const WeeklyForecast = () => {
                 style={[
                   forecastStyles.singleWeeklyForecastWeatherTitle,
                   {
-                    fontSize: forecast.day.condition.text.length > 8 ? 14 : 18,
+                    fontSize: forecast.day.condition.text.length > 8 ? 12 : 18,
                   },
                 ]}
               >

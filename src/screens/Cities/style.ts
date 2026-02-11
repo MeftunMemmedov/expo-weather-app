@@ -39,11 +39,10 @@ export const citiesStyles = StyleSheet.create({
   },
   singleCityHiddenBg: {
     flexDirection: "row",
-    justifyContent: "flex-end",
+    justifyContent: "space-between",
     height: 100,
   },
   singleCityHiddenBgBtn: {
-    backgroundColor: "#fa5c43",
     height: 100,
     paddingHorizontal: 35,
     flexDirection: "row",

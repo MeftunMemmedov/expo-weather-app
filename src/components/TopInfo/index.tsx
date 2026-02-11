@@ -1,12 +1,16 @@
 import { secondary_text_color } from "@/constants/colors";
-import { current } from "@/data";
 import { getFixedTemp } from "@/helpers/common";
 import { useSettings } from "@/hooks";
+import { useAppSelector } from "@/store/hooks";
 import { View, Text, Image, StyleSheet, Dimensions } from "react-native";
 
 const TopInfo = () => {
   const { getSetting } = useSettings();
   const tempSetting = getSetting("TEMPRATURE");
+
+  const { currentWeather: current } = useAppSelector((store) => store.weather);
+
+  if (current == null) return null;
   return (
     <View style={styles.topSection}>
       <View style={styles.topInfoTextBox}>

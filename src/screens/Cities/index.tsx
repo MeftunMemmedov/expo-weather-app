@@ -5,10 +5,9 @@ import { SwipeListView } from "react-native-swipe-list-view";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
 import { NativeStackScreenProps } from "@react-navigation/native-stack";
 import { RootStackParamList } from "@/types";
-import { useEffect } from "react";
-import { useFocusEffect } from "@react-navigation/native";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
-import { getCitiesFromStorage } from "@/store/city/actions";
+import { removeCityFromStorage, setCurrentCity } from "@/store/city/actions";
+import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 
 const Cities = ({ navigation }: NativeStackScreenProps<RootStackParamList>) => {
   const dispatch = useAppDispatch();
@@ -16,11 +15,6 @@ const Cities = ({ navigation }: NativeStackScreenProps<RootStackParamList>) => {
     (store) => store.city,
   );
 
-  useEffect(() => {
-    if (currentCity == null) {
-      dispatch(getCitiesFromStorage());
-    }
-  }, [currentCity]);
   return (
     <Container scroll>
       <View style={citiesStyles.mainContainer}>
@@ -53,23 +47,61 @@ const Cities = ({ navigation }: NativeStackScreenProps<RootStackParamList>) => {
                       {data.item.country}
                     </Text>
                   </View>
-                  {/* <Text style={citiesStyles.singleCityTemp}>
-                  {data.item.temprature}°
-                </Text> */}
+                  {currentCity?.id === data.item.id && (
+                    <FontAwesome6
+                      name="location-crosshairs"
+                      size={30}
+                      color="white"
+                    />
+                  )}
                 </View>
               )}
               renderHiddenItem={(data) => (
                 <View style={citiesStyles.singleCityHiddenBg}>
-                  <Pressable
-                    style={citiesStyles.singleCityHiddenBgBtn}
-                    // onPress={() => removeCity(data.item.lat, data.item.lon)}
-                  >
-                    <FontAwesome name="close" size={30} color="white" />
-                  </Pressable>
+                  {currentCity?.id === data.item.id ? (
+                    <View></View>
+                  ) : (
+                    <Pressable
+                      style={[
+                        citiesStyles.singleCityHiddenBgBtn,
+                        {
+                          backgroundColor: "#aaaecc",
+                        },
+                      ]}
+                      onPress={() => {
+                        dispatch(setCurrentCity(data.item));
+                      }}
+                    >
+                      <FontAwesome6
+                        name="location-crosshairs"
+                        size={30}
+                        color="black"
+                      />
+                    </Pressable>
+                  )}
+                  {currentCity?.id === data.item.id ? (
+                    <View></View>
+                  ) : (
+                    <Pressable
+                      style={[
+                        citiesStyles.singleCityHiddenBgBtn,
+                        {
+                          backgroundColor: "#fa5c43",
+                        },
+                      ]}
+                      onPress={() =>
+                        dispatch(removeCityFromStorage({ newCity: data.item }))
+                      }
+                    >
+                      <FontAwesome name="close" size={30} color="white" />
+                    </Pressable>
+                  )}
                 </View>
               )}
               rightOpenValue={-95}
+              leftOpenValue={95}
               leftActionValue={95}
+              rightActionValue={-95}
             ></SwipeListView>
           </View>
         )}

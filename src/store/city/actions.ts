@@ -29,6 +29,19 @@ export const addCityToStorage = createAsyncThunk<
   return updatedCities;
 });
 
+export const removeCityFromStorage = createAsyncThunk<
+  CityData[],
+  { newCity: CityData },
+  { state: RootState }
+>("city/addCityToStorage", async ({ newCity }, { getState }) => {
+  const { savedCities } = getState().city;
+
+  const updatedCities = savedCities.filter((city) => city.id !== newCity.id);
+  await AsyncStorage.setItem("cities", JSON.stringify(updatedCities));
+
+  return updatedCities;
+});
+
 export const setCurrentCity = createAsyncThunk(
   "city/setCurrentCity",
   async (city: CityData) => {

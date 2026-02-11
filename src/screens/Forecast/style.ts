@@ -87,7 +87,7 @@ export const forecastStyles = StyleSheet.create({
   },
   singleWeeklyForecastWeather: {
     flexDirection: "row",
-    justifyContent: "center",
+    // justifyContent: "center",
     alignItems: "center",
     gap: 5,
     width: "50%",

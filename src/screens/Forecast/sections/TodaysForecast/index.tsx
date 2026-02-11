@@ -5,6 +5,7 @@ import { forecast } from "@/data";
 import { format } from "date-fns";
 import { SettingsContext } from "@/context/SettingsContext";
 import { getFixedTemp } from "@/helpers/common";
+import { useAppSelector } from "@/store/hooks";
 
 const TodaysForecast = () => {
   const context = use(SettingsContext);
@@ -14,8 +15,11 @@ const TodaysForecast = () => {
   const tempSetting = settings.find(
     (setting) => setting.title === "TEMPERATURE",
   );
-  const now = forecast.location.localtime_epoch;
 
+  const { forecast } = useAppSelector((store) => store.weather);
+
+  if (forecast == null) return null;
+  const now = forecast.location.localtime_epoch;
   const todaysForecast = forecast.forecast.forecastday[0].hour
     .filter((h) => h.time_epoch >= now)
     .slice(0, 3);
