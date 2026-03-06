@@ -27,6 +27,7 @@ const Search = ({ navigation }: NativeStackScreenProps<RootStackParamList>) => {
   const [error, setError] = useState<string>("");
 
   const getSearchResults = async () => {
+    if (searchInput === "") return;
     try {
       setIsLoading(true);
       const { data } = await axiosInstance.get(`/search.json`, {
@@ -58,7 +59,11 @@ const Search = ({ navigation }: NativeStackScreenProps<RootStackParamList>) => {
           style={searchStyles.searchInput}
           placeholder="Search"
           placeholderTextColor={primary_text_color}
-          onChangeText={setSearchInput}
+          onChangeText={(text) => {
+            setSearchInput(text);
+            if (text === "") return;
+            setIsLoading(true);
+          }}
         />
         <Pressable style={searchStyles.cancelSearchBtn}>
           <Text
@@ -85,52 +90,62 @@ const Search = ({ navigation }: NativeStackScreenProps<RootStackParamList>) => {
             </Text>
           </View>
         ) : (
-          searchResults.map((result, index) => (
-            <View
-              key={`search-result-${result.id}-${index}`}
-              style={searchStyles.singleSearchResult}
-            >
-              {/* <Image
+          searchResults.map((result, index) => {
+            const isCityExist = savedCities.some(
+              (city) => city.id === result.id,
+            );
+            return (
+              <View
+                key={`search-result-${result.id}-${index}`}
+                style={searchStyles.singleSearchResult}
+              >
+                {/* <Image
               style={searchStyles.singleResultWeatherIcon}
               source={{uri:result}}
             /> */}
-              <View style={searchStyles.singleResultInfoBox}>
-                <View style={searchStyles.singleResultInfos}>
-                  <Text style={searchStyles.singleResultInfoCityname}>
-                    {result.name}
-                  </Text>
-                  <Text style={searchStyles.singleResultInfoTime}>
-                    {result.country}
-                  </Text>
+                <View style={searchStyles.singleResultInfoBox}>
+                  <View style={searchStyles.singleResultInfos}>
+                    <Text
+                      style={[
+                        searchStyles.singleResultInfoCityname,
+                        { fontSize: result.name.length > 20 ? 12 : 18 },
+                      ]}
+                    >
+                      {result.name}
+                    </Text>
+                    <Text style={searchStyles.singleResultInfoTime}>
+                      {result.country}
+                    </Text>
+                  </View>
+                  {/* <Text style={searchStyles.singleResultInfoTemp}>29°</Text> */}
+                  <Pressable
+                    style={{ paddingHorizontal: 10 }}
+                    onPress={() => {
+                      if (isCityExist) {
+                        dispatch(removeCityFromStorage({ newCity: result }));
+                      } else {
+                        dispatch(addCityToStorage({ newCity: result }));
+                      }
+                    }}
+                  >
+                    {isCityExist ? (
+                      <MaterialCommunityIcons
+                        name="delete-forever"
+                        size={24}
+                        color={primary_text_color}
+                      />
+                    ) : (
+                      <AntDesign
+                        name="plus"
+                        size={24}
+                        color={primary_text_color}
+                      />
+                    )}
+                  </Pressable>
                 </View>
-                {/* <Text style={searchStyles.singleResultInfoTemp}>29°</Text> */}
-                <Pressable
-                  style={{ paddingHorizontal: 10 }}
-                  onPress={() => {
-                    if (savedCities.some((city) => city.id === result.id)) {
-                      dispatch(removeCityFromStorage({ newCity: result }));
-                    } else {
-                      dispatch(addCityToStorage({ newCity: result }));
-                    }
-                  }}
-                >
-                  {savedCities.some((city) => city.id === result.id) ? (
-                    <MaterialCommunityIcons
-                      name="delete-forever"
-                      size={24}
-                      color={primary_text_color}
-                    />
-                  ) : (
-                    <AntDesign
-                      name="plus"
-                      size={24}
-                      color={primary_text_color}
-                    />
-                  )}
-                </Pressable>
               </View>
-            </View>
-          ))
+            );
+          })
         )}
       </View>
     </Container>

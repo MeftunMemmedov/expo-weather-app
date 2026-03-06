@@ -8,6 +8,8 @@ import { RootStackParamList } from "@/types";
 import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { removeCityFromStorage, setCurrentCity } from "@/store/city/actions";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
+import ToastManager, { Toast } from "toastify-react-native";
+import { main_blue, secondary_color } from "@/constants/colors";
 
 const Cities = ({ navigation }: NativeStackScreenProps<RootStackParamList>) => {
   const dispatch = useAppDispatch();
@@ -70,6 +72,14 @@ const Cities = ({ navigation }: NativeStackScreenProps<RootStackParamList>) => {
                       ]}
                       onPress={() => {
                         dispatch(setCurrentCity(data.item));
+                        Toast.show({
+                          type: "success",
+                          text1: `${data.item.name} is current city now`,
+                          backgroundColor: secondary_color,
+                          textColor: "white",
+                          progressBarColor: main_blue,
+                          iconColor: "white",
+                        });
                       }}
                     >
                       <FontAwesome6
@@ -89,9 +99,17 @@ const Cities = ({ navigation }: NativeStackScreenProps<RootStackParamList>) => {
                           backgroundColor: "#fa5c43",
                         },
                       ]}
-                      onPress={() =>
-                        dispatch(removeCityFromStorage({ newCity: data.item }))
-                      }
+                      onPress={() => {
+                        dispatch(removeCityFromStorage({ newCity: data.item }));
+                        Toast.show({
+                          type: "error",
+                          text1: `${data.item.name} removed`,
+                          backgroundColor: secondary_color,
+                          textColor: "white",
+                          progressBarColor: main_blue,
+                          iconColor: "red",
+                        });
+                      }}
                     >
                       <FontAwesome name="close" size={30} color="white" />
                     </Pressable>
@@ -106,6 +124,7 @@ const Cities = ({ navigation }: NativeStackScreenProps<RootStackParamList>) => {
           </View>
         )}
       </View>
+      <ToastManager />
     </Container>
   );
 };

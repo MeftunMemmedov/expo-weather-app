@@ -10,6 +10,8 @@ import { useAppSelector } from "@/store/hooks";
 const AirConditionDetails = () => {
   const { getSetting } = useSettings();
   const tempSetting = getSetting("TEMPRATURE");
+  const windSetting = getSetting("WIND SPEED");
+  const pressureSetting = getSetting("PRESSURE");
 
   const { forecast, currentWeather: current } = useAppSelector(
     (store) => store.weather,
@@ -18,6 +20,16 @@ const AirConditionDetails = () => {
 
   const chance_of_rain = getChancheOfRain(forecast.forecast.forecastday);
 
+  const getPressure = () => {
+    if (pressureSetting.selected === "hPa") {
+      return `${current.current.pressure_mb} hPa`;
+    } else if (pressureSetting.selected === "Inches") {
+      return `${current.current.pressure_in} Inches`;
+    }
+  };
+
+  const currentPressure = getPressure();
+
   const airConditionData: AirConditionData[] = [
     {
       title: "UV INDEX",
@@ -25,7 +37,7 @@ const AirConditionDetails = () => {
     },
     {
       title: "WIND",
-      value: `${current.current.wind_kph} km/h`,
+      value: `${windSetting.selected === "km/h" ? `${current.current.wind_kph} km/h` : `${current.current.wind_mph} mph`}`,
     },
     {
       title: "HUMIDITY",
@@ -45,7 +57,7 @@ const AirConditionDetails = () => {
     },
     {
       title: "PRESSURE",
-      value: `${current.current.pressure_mb} hPa`,
+      value: currentPressure,
     },
     {
       title: "SUNSET",

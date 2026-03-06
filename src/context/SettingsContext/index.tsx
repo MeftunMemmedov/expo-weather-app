@@ -14,7 +14,7 @@ const SettingsContextProvider = ({ children }: { children: ReactNode }) => {
     },
     {
       title: "WIND SPEED",
-      options: [{ label: "km/h" }, { label: "m/s" }, { label: "Knots" }],
+      options: [{ label: "km/h" }, { label: "mph" }],
       selected: "km/h",
     },
     {
@@ -22,10 +22,8 @@ const SettingsContextProvider = ({ children }: { children: ReactNode }) => {
       options: [
         { label: "hPa" },
         { label: "Inches" },
-        { label: "kPa" },
-        { label: "mm" },
       ],
-      selected: "mm",
+      selected: "hPa",
     },
     {
       title: "PRECIPITATION",

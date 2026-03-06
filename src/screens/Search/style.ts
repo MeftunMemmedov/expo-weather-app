@@ -58,7 +58,6 @@ export const searchStyles = StyleSheet.create({
   },
   singleResultInfos: {},
   singleResultInfoCityname: {
-    fontSize: 18,
     color: primary_text_color,
     fontWeight: "bold",
     marginBottom: 5,
