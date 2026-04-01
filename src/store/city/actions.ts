@@ -2,6 +2,7 @@ import { CityData } from "@/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "..";
+import { detectCity } from "@/helpers/cities";
 
 export const getCitiesFromStorage = createAsyncThunk(
   "city/getCitiesFromStorage",
@@ -9,9 +10,21 @@ export const getCitiesFromStorage = createAsyncThunk(
     const localCurrentCity = await AsyncStorage.getItem("currentCity");
     const localCityList = await AsyncStorage.getItem("cities");
 
+    let currentCity = localCurrentCity ? JSON.parse(localCurrentCity) : null;
+    let savedCities = localCityList ? JSON.parse(localCityList) : [];
+
+    if (!currentCity) {
+      const locatedCity = await detectCity();
+      if (locatedCity) {
+        currentCity = locatedCity;
+        savedCities = [locatedCity];
+      }
+      await AsyncStorage.setItem("currentCity", JSON.stringify(currentCity));
+      await AsyncStorage.setItem("cities", JSON.stringify(savedCities));
+    }
     return {
-      currentCity: localCurrentCity ? JSON.parse(localCurrentCity) : null,
-      savedCities: localCityList ? JSON.parse(localCityList) : [],
+      currentCity,
+      savedCities,
     };
   },
 );

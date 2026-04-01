@@ -10,6 +10,7 @@ import { removeCityFromStorage, setCurrentCity } from "@/store/city/actions";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import ToastManager, { Toast } from "toastify-react-native";
 import { main_blue, secondary_color } from "@/constants/colors";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Cities = ({ navigation }: NativeStackScreenProps<RootStackParamList>) => {
   const dispatch = useAppDispatch();
@@ -19,6 +20,14 @@ const Cities = ({ navigation }: NativeStackScreenProps<RootStackParamList>) => {
 
   return (
     <Container scroll>
+      <Pressable
+        style={{ marginTop: 20 }}
+        onPress={async () => {
+          await AsyncStorage.clear();
+        }}
+      >
+        <Text style={{ color: "white" }}> RESET STORE</Text>
+      </Pressable>
       <View style={citiesStyles.mainContainer}>
         <Text style={citiesStyles.screenTitle}>My Cities</Text>
         <Pressable
@@ -39,83 +48,91 @@ const Cities = ({ navigation }: NativeStackScreenProps<RootStackParamList>) => {
           <View>
             <SwipeListView
               data={savedCities}
-              renderItem={(data) => (
-                <View style={citiesStyles.singleCityItem}>
-                  <View style={citiesStyles.singleCityLeftSide}>
-                    <Text style={citiesStyles.singleCityName}>
-                      {data.item.name}
-                    </Text>
-                    <Text style={citiesStyles.singleCityTime}>
-                      {data.item.country}
-                    </Text>
-                  </View>
-                  {currentCity?.id === data.item.id && (
-                    <FontAwesome6
-                      name="location-crosshairs"
-                      size={30}
-                      color="white"
-                    />
-                  )}
-                </View>
-              )}
-              renderHiddenItem={(data) => (
-                <View style={citiesStyles.singleCityHiddenBg}>
-                  {currentCity?.id === data.item.id ? (
-                    <View></View>
-                  ) : (
-                    <Pressable
-                      style={[
-                        citiesStyles.singleCityHiddenBgBtn,
-                        {
-                          backgroundColor: "#aaaecc",
-                        },
-                      ]}
-                      onPress={() => {
-                        dispatch(setCurrentCity(data.item));
-                        Toast.show({
-                          type: "success",
-                          text1: `${data.item.name} is current city now`,
-                          backgroundColor: secondary_color,
-                          textColor: "white",
-                          progressBarColor: main_blue,
-                          iconColor: "white",
-                        });
-                      }}
-                    >
+              renderItem={(data) => {
+                const isCurrentCity = currentCity?.id === data.item.id;
+                return (
+                  <View style={citiesStyles.singleCityItem}>
+                    <View style={citiesStyles.singleCityLeftSide}>
+                      <Text style={citiesStyles.singleCityName}>
+                        {data.item.name}
+                      </Text>
+                      <Text style={citiesStyles.singleCityTime}>
+                        {data.item.country}
+                      </Text>
+                    </View>
+                    {isCurrentCity && (
                       <FontAwesome6
                         name="location-crosshairs"
                         size={30}
-                        color="black"
+                        color="white"
                       />
-                    </Pressable>
-                  )}
-                  {currentCity?.id === data.item.id ? (
-                    <View></View>
-                  ) : (
-                    <Pressable
-                      style={[
-                        citiesStyles.singleCityHiddenBgBtn,
-                        {
-                          backgroundColor: "#fa5c43",
-                        },
-                      ]}
-                      onPress={() => {
-                        dispatch(removeCityFromStorage({ newCity: data.item }));
-                        Toast.show({
-                          type: "error",
-                          text1: `${data.item.name} removed`,
-                          backgroundColor: secondary_color,
-                          textColor: "white",
-                          progressBarColor: main_blue,
-                          iconColor: "red",
-                        });
-                      }}
-                    >
-                      <FontAwesome name="close" size={30} color="white" />
-                    </Pressable>
-                  )}
-                </View>
-              )}
+                    )}
+                  </View>
+                );
+              }}
+              renderHiddenItem={(data) => {
+                const isCurrentCity = currentCity?.id === data.item.id;
+                return (
+                  <View style={citiesStyles.singleCityHiddenBg}>
+                    {isCurrentCity ? (
+                      <View></View>
+                    ) : (
+                      <Pressable
+                        style={[
+                          citiesStyles.singleCityHiddenBgBtn,
+                          {
+                            backgroundColor: "#aaaecc",
+                          },
+                        ]}
+                        onPress={() => {
+                          dispatch(setCurrentCity(data.item));
+                          Toast.show({
+                            type: "success",
+                            text1: `${data.item.name} is current city now`,
+                            backgroundColor: secondary_color,
+                            textColor: "white",
+                            progressBarColor: main_blue,
+                            iconColor: "white",
+                          });
+                        }}
+                      >
+                        <FontAwesome6
+                          name="location-crosshairs"
+                          size={30}
+                          color="black"
+                        />
+                      </Pressable>
+                    )}
+                    {isCurrentCity ? (
+                      <View></View>
+                    ) : (
+                      <Pressable
+                        style={[
+                          citiesStyles.singleCityHiddenBgBtn,
+                          {
+                            backgroundColor: "#fa5c43",
+                          },
+                        ]}
+                        onPress={() => {
+                          dispatch(
+                            removeCityFromStorage({ newCity: data.item }),
+                          );
+                          Toast.show({
+                            type: "error",
+                            text1: `${data.item.name} removed`,
+                            backgroundColor: secondary_color,
+                            textColor: "white",
+                            progressBarColor: main_blue,
+                            iconColor: "red",
+                          });
+                        }}
+                      >
+                        <FontAwesome name="close" size={30} color="white" />
+                      </Pressable>
+                    )}
+                  </View>
+                );
+              }}
               rightOpenValue={-95}
               leftOpenValue={95}
               leftActionValue={95}

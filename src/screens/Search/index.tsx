@@ -16,6 +16,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { addCityToStorage, removeCityFromStorage } from "@/store/city/actions";
 import { useEffect, useState } from "react";
 import axiosInstance from "@/api";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Search = ({ navigation }: NativeStackScreenProps<RootStackParamList>) => {
   const dispatch = useAppDispatch();
@@ -52,6 +53,7 @@ const Search = ({ navigation }: NativeStackScreenProps<RootStackParamList>) => {
   useEffect(() => {
     if (debouncedVal !== "") getSearchResults();
   }, [debouncedVal]);
+
   return (
     <Container scroll>
       <View style={searchStyles.formContainer}>
@@ -94,6 +96,7 @@ const Search = ({ navigation }: NativeStackScreenProps<RootStackParamList>) => {
             const isCityExist = savedCities.some(
               (city) => city.id === result.id,
             );
+            const isCityDeletable = isCityExist && savedCities.length > 1;
             return (
               <View
                 key={`search-result-${result.id}-${index}`}
@@ -119,9 +122,11 @@ const Search = ({ navigation }: NativeStackScreenProps<RootStackParamList>) => {
                   </View>
                   {/* <Text style={searchStyles.singleResultInfoTemp}>29°</Text> */}
                   <Pressable
+                    // disabled={!isCityDeletable}
                     style={{ paddingHorizontal: 10 }}
                     onPress={() => {
                       if (isCityExist) {
+                        if (!isCityDeletable) return;
                         dispatch(removeCityFromStorage({ newCity: result }));
                       } else {
                         dispatch(addCityToStorage({ newCity: result }));
@@ -133,6 +138,9 @@ const Search = ({ navigation }: NativeStackScreenProps<RootStackParamList>) => {
                         name="delete-forever"
                         size={24}
                         color={primary_text_color}
+                        style={{
+                          display: !isCityDeletable ? "none" : "flex",
+                        }}
                       />
                     ) : (
                       <AntDesign

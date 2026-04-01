@@ -5,5 +5,5 @@ export type CityData = {
   country: string;
   lat: number;
   lon: number;
-  url: string;
+  url?: string;
 };
