@@ -1,5 +1,5 @@
 import Container from "@/components/Container";
-import { View, Text, Pressable } from "react-native";
+import { View, Text, Pressable, ActivityIndicator } from "react-native";
 import { citiesStyles } from "./style";
 import { SwipeListView } from "react-native-swipe-list-view";
 import FontAwesome from "@expo/vector-icons/FontAwesome";
@@ -9,8 +9,12 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { removeCityFromStorage, setCurrentCity } from "@/store/city/actions";
 import FontAwesome6 from "@expo/vector-icons/FontAwesome6";
 import ToastManager, { Toast } from "toastify-react-native";
-import { main_blue, secondary_color } from "@/constants/colors";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import {
+  main_blue,
+  primary_text_color,
+  secondary_color,
+} from "@/constants/colors";
+// import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Cities = ({ navigation }: NativeStackScreenProps<RootStackParamList>) => {
   const dispatch = useAppDispatch();
@@ -20,14 +24,14 @@ const Cities = ({ navigation }: NativeStackScreenProps<RootStackParamList>) => {
 
   return (
     <Container scroll>
-      <Pressable
+      {/* <Pressable
         style={{ marginTop: 20 }}
         onPress={async () => {
           await AsyncStorage.clear();
         }}
       >
         <Text style={{ color: "white" }}> RESET STORE</Text>
-      </Pressable>
+      </Pressable> */}
       <View style={citiesStyles.mainContainer}>
         <Text style={citiesStyles.screenTitle}>My Cities</Text>
         <Pressable
@@ -38,7 +42,7 @@ const Cities = ({ navigation }: NativeStackScreenProps<RootStackParamList>) => {
         </Pressable>
         {isLoading ? (
           <View>
-            <Text style={{ color: "white" }}>LOADING//</Text>
+            <ActivityIndicator size={100} color={primary_text_color} />
           </View>
         ) : savedCities?.length === 0 ? (
           <View>

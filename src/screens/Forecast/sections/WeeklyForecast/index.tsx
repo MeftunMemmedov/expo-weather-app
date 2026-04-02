@@ -7,7 +7,7 @@ import { useAppSelector } from "@/store/hooks";
 const WeeklyForecast = () => {
   const { getSetting } = useSettings();
 
-  const tempSetting = getSetting("TEMPRATURE");
+  const tempSetting = getSetting("TEMPERATURE");
 
   const { forecast } = useAppSelector((store) => store.weather);
 

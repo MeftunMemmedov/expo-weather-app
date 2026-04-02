@@ -6,10 +6,9 @@ import { View, Text, Image, StyleSheet, Dimensions } from "react-native";
 
 const TopInfo = () => {
   const { getSetting } = useSettings();
-  const tempSetting = getSetting("TEMPRATURE");
+  const tempSetting = getSetting("TEMPERATURE");
 
   const { currentWeather: current } = useAppSelector((store) => store.weather);
-
   if (current == null) return null;
   return (
     <View style={styles.topSection}>

@@ -81,7 +81,7 @@ export const forecastStyles = StyleSheet.create({
     borderColor: secondary_text_color,
   },
   singleWeeklyForecastDay: {
-    fontSize: 18,
+    fontSize: 15,
     color: secondary_text_color,
     width: "30%",
   },

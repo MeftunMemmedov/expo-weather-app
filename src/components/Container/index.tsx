@@ -7,14 +7,22 @@ import {
   ScrollView,
   StyleProp,
   ViewStyle,
+  RefreshControl,
 } from "react-native";
 
 interface Props {
   children: ReactNode;
   scroll: boolean;
+  refreshing?: boolean;
+  onRefresh?: () => void;
 }
 
-export default function Container({ children, scroll = true }: Props) {
+export default function Container({
+  children,
+  scroll = true,
+  refreshing = false,
+  onRefresh,
+}: Props) {
   const { width } = useWindowDimensions();
 
   const getMaxWidth = () => {
@@ -31,7 +39,18 @@ export default function Container({ children, scroll = true }: Props) {
     { maxWidth: getMaxWidth(), width: "100%" },
   ];
   if (scroll)
-    return <ScrollView style={containerStyles}>{children}</ScrollView>;
+    return (
+      <ScrollView
+        style={containerStyles}
+        {...(onRefresh && {
+          refreshControl: (
+            <RefreshControl refreshing={refreshing} onRefresh={onRefresh} />
+          ),
+        })}
+      >
+        {children}
+      </ScrollView>
+    );
 
   return <View style={containerStyles}>{children}</View>;
 }

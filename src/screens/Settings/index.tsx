@@ -8,6 +8,8 @@ import {
   secondary_color,
   secondary_text_color,
 } from "@/constants/colors";
+import { SettingTitle } from "@/types";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Settings = () => {
   const context = use(SettingsContext);
@@ -15,14 +17,15 @@ const Settings = () => {
   if (!context) return null;
   const { settings, setSettings } = context;
 
-  const handleSetting = (title: string, label: string, index: number) => {
-    const updatedSettings = settings.map((setting, i) => {
-      if (i === index) {
+  const handleSetting = async (title: SettingTitle, label: string) => {
+    const updatedSettings = settings.map((setting) => {
+      if (setting.title === title) {
         return { ...setting, title, selected: label };
       }
       return setting;
     });
     setSettings(updatedSettings);
+    // await AsyncStorage.setItem("settings", JSON.stringify(updatedSettings));
   };
 
   return (
@@ -44,9 +47,7 @@ const Settings = () => {
                   key={`setting-${setting.title}-${option.label}$-${i}`}
                 >
                   <Pressable
-                    onPress={() =>
-                      handleSetting(setting.title, option.label, index)
-                    }
+                    onPress={() => handleSetting(setting.title, option.label)}
                     style={[
                       settingStyles.settingsSwitchBtn,
                       {

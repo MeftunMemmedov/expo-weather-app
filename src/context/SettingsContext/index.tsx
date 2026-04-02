@@ -1,5 +1,6 @@
 import { Setting, SettingsContextType } from "@/types";
-import { createContext, ReactNode, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { createContext, ReactNode, useEffect, useState } from "react";
 
 export const SettingsContext = createContext<SettingsContextType | undefined>(
   undefined,
@@ -19,10 +20,7 @@ const SettingsContextProvider = ({ children }: { children: ReactNode }) => {
     },
     {
       title: "PRESSURE",
-      options: [
-        { label: "hPa" },
-        { label: "Inches" },
-      ],
+      options: [{ label: "hPa" }, { label: "Inches" }],
       selected: "hPa",
     },
     {
@@ -37,6 +35,19 @@ const SettingsContextProvider = ({ children }: { children: ReactNode }) => {
     },
   ]);
 
+  const getSavedSettings = async () => {
+    const localSavedSettings = await AsyncStorage.getItem("settings");
+    const savedSettings = localSavedSettings
+      ? JSON.parse(localSavedSettings)
+      : null;
+    if (savedSettings) {
+      setSettings(savedSettings);
+    }
+  };
+
+  useEffect(() => {
+    getSavedSettings();
+  }, []);
   return (
     <SettingsContext value={{ settings, setSettings }}>
       {children}

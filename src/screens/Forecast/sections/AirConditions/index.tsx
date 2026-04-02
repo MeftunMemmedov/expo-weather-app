@@ -13,7 +13,9 @@ import { useAppSelector } from "@/store/hooks";
 const Airconditions = () => {
   const { getSetting } = useSettings();
 
-  const tempSetting = getSetting("TEMPRATURE");
+  const tempSetting = getSetting("TEMPERATURE");
+  const windSetting = getSetting("WIND SPEED");
+
   const { navigate } = useNavigation<NavigationProp<RootStackParamList>>();
 
   const { currentWeather: current, forecast } = useAppSelector(
@@ -41,7 +43,10 @@ const Airconditions = () => {
     {
       title: "Wind",
       icon: <FontAwesome5 name="wind" size={24} color={secondary_text_color} />,
-      value: `${current.current.wind_kph} km/h`,
+      value:
+        windSetting.selected === "km/h"
+          ? `${current.current.wind_kph} km/h`
+          : `${current.current.wind_mph} mph`,
     },
     {
       title: "Chance of rain",

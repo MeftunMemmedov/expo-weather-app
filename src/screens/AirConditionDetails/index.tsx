@@ -5,30 +5,51 @@ import { View, Text } from "react-native";
 import { styles } from "./style";
 import { getChancheOfRain, getFixedTemp } from "@/helpers/common";
 import { useSettings } from "@/hooks";
-import { useAppSelector } from "@/store/hooks";
+import { useAppDispatch, useAppSelector } from "@/store/hooks";
+import { useState } from "react";
+import { getCurrentWeather, getForecast } from "@/store/weather/actions";
+import LoadingSpinnner from "@/components/LoadingSpinner";
+import ErrorMessage from "@/components/ErrorMessage";
 
 const AirConditionDetails = () => {
+  const dispatch = useAppDispatch();
+  const {
+    forecast,
+    currentWeather: current,
+    status: {
+      currentWeather: {
+        LOADING: isCurrentWeatherLoading,
+        FAILURE: isCurrentWeatherFailed,
+      },
+      forecast: { LOADING: isForecastLoading, FAILURE: isForecastFailed },
+    },
+  } = useAppSelector((store) => store.weather);
+  const { currentCity } = useAppSelector((store) => store.city);
+
   const { getSetting } = useSettings();
-  const tempSetting = getSetting("TEMPRATURE");
+  const tempSetting = getSetting("TEMPERATURE");
   const windSetting = getSetting("WIND SPEED");
   const pressureSetting = getSetting("PRESSURE");
+  const distanceSetting = getSetting("DISTANCE");
 
-  const { forecast, currentWeather: current } = useAppSelector(
-    (store) => store.weather,
-  );
   if (forecast == null || current == null) return;
 
   const chance_of_rain = getChancheOfRain(forecast.forecast.forecastday);
 
-  const getPressure = () => {
-    if (pressureSetting.selected === "hPa") {
-      return `${current.current.pressure_mb} hPa`;
-    } else if (pressureSetting.selected === "Inches") {
-      return `${current.current.pressure_in} Inches`;
+  const [isRefresing, setIsRefreshing] = useState<boolean>(false);
+
+  const handleRefresh = () => {
+    if (currentCity === null) return;
+    try {
+      setIsRefreshing(true);
+      dispatch(getCurrentWeather(`${currentCity.lat},${currentCity.lon}`));
+      dispatch(
+        getForecast({ q: `${currentCity.lat},${currentCity.lon}`, days: 7 }),
+      );
+    } finally {
+      setIsRefreshing(false);
     }
   };
-
-  const currentPressure = getPressure();
 
   const airConditionData: AirConditionData[] = [
     {
@@ -45,7 +66,10 @@ const AirConditionDetails = () => {
     },
     {
       title: "VISIBILITY",
-      value: `${current.current.vis_km} km`,
+      value:
+        distanceSetting.selected === "Kilometers"
+          ? `${current.current.vis_km} km`
+          : `${current.current.vis_miles} mm`,
     },
     {
       title: "FEELS LIKE",
@@ -57,15 +81,25 @@ const AirConditionDetails = () => {
     },
     {
       title: "PRESSURE",
-      value: currentPressure,
+      value:
+        pressureSetting.selected === "hPa"
+          ? `${current.current.pressure_mb} hPa`
+          : `${current.current.pressure_in} Inches`,
     },
     {
       title: "SUNSET",
       value: `${forecast.forecast.forecastday[0].astro.sunset}`,
     },
   ];
+
+  if (isCurrentWeatherLoading || isForecastLoading) return <LoadingSpinnner />;
+  if (isCurrentWeatherFailed || isForecastFailed) return <ErrorMessage />;
   return (
-    <Container scroll>
+    <Container
+      refreshing={isRefresing && (isCurrentWeatherLoading || isForecastLoading)}
+      onRefresh={handleRefresh}
+      scroll
+    >
       <TopInfo />
       <View style={styles.airconditionsRow}>
         {airConditionData.map((aircondition, index) => (

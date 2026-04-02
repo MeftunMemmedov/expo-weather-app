@@ -1,22 +1,17 @@
 import { View, Text, Image } from "react-native";
 import { forecastStyles } from "../../style";
-import { Fragment, use } from "react";
-import { forecast } from "@/data";
+import { Fragment } from "react";
 import { format } from "date-fns";
-import { SettingsContext } from "@/context/SettingsContext";
 import { getFixedTemp } from "@/helpers/common";
 import { useAppSelector } from "@/store/hooks";
+import { useSettings } from "@/hooks";
 
 const TodaysForecast = () => {
-  const context = use(SettingsContext);
-
-  if (!context) return null;
-  const { settings } = context;
-  const tempSetting = settings.find(
-    (setting) => setting.title === "TEMPERATURE",
-  );
-
   const { forecast } = useAppSelector((store) => store.weather);
+
+  const { getSetting } = useSettings();
+
+  const tempSetting = getSetting("TEMPERATURE");
 
   if (forecast == null) return null;
   const now = forecast.location.localtime_epoch;

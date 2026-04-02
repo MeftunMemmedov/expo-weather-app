@@ -16,7 +16,7 @@ import { useAppDispatch, useAppSelector } from "@/store/hooks";
 import { addCityToStorage, removeCityFromStorage } from "@/store/city/actions";
 import { useEffect, useState } from "react";
 import axiosInstance from "@/api";
-import AsyncStorage from "@react-native-async-storage/async-storage";
+import ErrorMessage from "@/components/ErrorMessage";
 
 const Search = ({ navigation }: NativeStackScreenProps<RootStackParamList>) => {
   const dispatch = useAppDispatch();
@@ -77,8 +77,11 @@ const Search = ({ navigation }: NativeStackScreenProps<RootStackParamList>) => {
         </Pressable>
       </View>
       <View style={searchStyles.searchResultList}>
+        {error && <ErrorMessage />}
         {isLoading ? (
-          <ActivityIndicator size={100} color={primary_text_color} />
+          <View>
+            <ActivityIndicator size={100} color={primary_text_color} />
+          </View>
         ) : debouncedVal !== "" && searchResults.length == 0 ? (
           <View>
             <Text
