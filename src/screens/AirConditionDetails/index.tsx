@@ -10,6 +10,12 @@ import { useState } from "react";
 import { getCurrentWeather, getForecast } from "@/store/weather/actions";
 import LoadingSpinnner from "@/components/LoadingSpinner";
 import ErrorMessage from "@/components/ErrorMessage";
+import {
+  SETTING_DISTANCE_KEY,
+  SETTING_PRESSURE_KEY,
+  SETTING_TEMPERATURE_KEY,
+  SETTING_WINDSPEED_KEY,
+} from "@/constants/settingKeys";
 
 const AirConditionDetails = () => {
   const dispatch = useAppDispatch();
@@ -24,13 +30,15 @@ const AirConditionDetails = () => {
       forecast: { LOADING: isForecastLoading, FAILURE: isForecastFailed },
     },
   } = useAppSelector((store) => store.weather);
+
   const { currentCity } = useAppSelector((store) => store.city);
 
-  const { getSetting } = useSettings();
-  const tempSetting = getSetting("TEMPERATURE");
-  const windSetting = getSetting("WIND SPEED");
-  const pressureSetting = getSetting("PRESSURE");
-  const distanceSetting = getSetting("DISTANCE");
+  const { getUnitSetting } = useSettings();
+
+  const tempSetting = getUnitSetting(SETTING_TEMPERATURE_KEY);
+  const windSetting = getUnitSetting(SETTING_WINDSPEED_KEY);
+  const pressureSetting = getUnitSetting(SETTING_PRESSURE_KEY);
+  const distanceSetting = getUnitSetting(SETTING_DISTANCE_KEY);
 
   if (forecast == null || current == null) return;
 
@@ -58,7 +66,7 @@ const AirConditionDetails = () => {
     },
     {
       title: "WIND",
-      value: `${windSetting.selected === "km/h" ? `${current.current.wind_kph} km/h` : `${current.current.wind_mph} mph`}`,
+      value: `${windSetting?.selected === "km/h" ? `${current.current.wind_kph} km/h` : `${current.current.wind_mph} mph`}`,
     },
     {
       title: "HUMIDITY",
@@ -67,7 +75,7 @@ const AirConditionDetails = () => {
     {
       title: "VISIBILITY",
       value:
-        distanceSetting.selected === "Kilometers"
+        distanceSetting?.selected === "Kilometers"
           ? `${current.current.vis_km} km`
           : `${current.current.vis_miles} mm`,
     },
@@ -82,7 +90,7 @@ const AirConditionDetails = () => {
     {
       title: "PRESSURE",
       value:
-        pressureSetting.selected === "hPa"
+        pressureSetting?.selected === "hPa"
           ? `${current.current.pressure_mb} hPa`
           : `${current.current.pressure_in} Inches`,
     },

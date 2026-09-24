@@ -3,13 +3,16 @@ import { forecastStyles } from "../../style";
 import { format, fromUnixTime, isToday, isTomorrow } from "date-fns";
 import { useSettings } from "@/hooks";
 import { useAppSelector } from "@/store/hooks";
+import { SETTING_TEMPERATURE_KEY } from "@/constants/settingKeys";
 
 const WeeklyForecast = () => {
-  const { getSetting } = useSettings();
+  const { getUnitSetting } = useSettings();
 
-  const tempSetting = getSetting("TEMPERATURE");
+  const tempSetting = getUnitSetting(SETTING_TEMPERATURE_KEY);
 
   const { forecast } = useAppSelector((store) => store.weather);
+
+  if (forecast === null) return null;
 
   const getDayLabel = (epoch: number) => {
     const date = fromUnixTime(epoch);
@@ -18,8 +21,6 @@ const WeeklyForecast = () => {
 
     return format(date, "EEEE");
   };
-
-  if (forecast == null) return null;
 
   return (
     <View style={forecastStyles.weeklyForecastContainer}>

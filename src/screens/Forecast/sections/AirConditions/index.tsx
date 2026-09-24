@@ -9,12 +9,16 @@ import { AirConditionData, RootStackParamList } from "@/types";
 import { useSettings } from "@/hooks";
 import { getChancheOfRain, getFixedTemp } from "@/helpers/common";
 import { useAppSelector } from "@/store/hooks";
+import {
+  SETTING_TEMPERATURE_KEY,
+  SETTING_WINDSPEED_KEY,
+} from "@/constants/settingKeys";
 
 const Airconditions = () => {
-  const { getSetting } = useSettings();
+  const { getUnitSetting } = useSettings();
 
-  const tempSetting = getSetting("TEMPERATURE");
-  const windSetting = getSetting("WIND SPEED");
+  const tempSetting = getUnitSetting(SETTING_TEMPERATURE_KEY);
+  const windSetting = getUnitSetting(SETTING_WINDSPEED_KEY);
 
   const { navigate } = useNavigation<NavigationProp<RootStackParamList>>();
 
@@ -22,11 +26,11 @@ const Airconditions = () => {
     (store) => store.weather,
   );
 
+  if (current == null || forecast == null) return null;
+
   const chance_of_rain = forecast
     ? getChancheOfRain(forecast.forecast.forecastday)
     : null;
-
-  if (current == null || forecast == null) return null;
 
   const airConditionData: AirConditionData[] = [
     {
@@ -44,7 +48,7 @@ const Airconditions = () => {
       title: "Wind",
       icon: <FontAwesome5 name="wind" size={24} color={secondary_text_color} />,
       value:
-        windSetting.selected === "km/h"
+        windSetting?.selected === "km/h"
           ? `${current.current.wind_kph} km/h`
           : `${current.current.wind_mph} mph`,
     },
@@ -63,7 +67,7 @@ const Airconditions = () => {
     {
       title: "UV index",
       icon: <FontAwesome5 name="sun" size={24} color={secondary_text_color} />,
-      value: current.current.uv.toFixed().toString(),
+      value: String(current.current.uv.toFixed()),
     },
   ];
 

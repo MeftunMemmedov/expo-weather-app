@@ -14,7 +14,6 @@ import {
   primary_text_color,
   secondary_color,
 } from "@/constants/colors";
-// import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const Cities = ({ navigation }: NativeStackScreenProps<RootStackParamList>) => {
   const dispatch = useAppDispatch();
@@ -24,14 +23,6 @@ const Cities = ({ navigation }: NativeStackScreenProps<RootStackParamList>) => {
 
   return (
     <Container scroll>
-      {/* <Pressable
-        style={{ marginTop: 20 }}
-        onPress={async () => {
-          await AsyncStorage.clear();
-        }}
-      >
-        <Text style={{ color: "white" }}> RESET STORE</Text>
-      </Pressable> */}
       <View style={citiesStyles.mainContainer}>
         <Text style={citiesStyles.screenTitle}>My Cities</Text>
         <Pressable
@@ -46,7 +37,9 @@ const Cities = ({ navigation }: NativeStackScreenProps<RootStackParamList>) => {
           </View>
         ) : savedCities?.length === 0 ? (
           <View>
-            <Text style={{ color: "white" }}>No City Found</Text>
+            <Text style={{ color: "white", fontWeight: "bold" }}>
+              No city found
+            </Text>
           </View>
         ) : (
           <View>

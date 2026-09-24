@@ -1,12 +1,7 @@
-import { Forecast, Weather } from "@/types";
+import { Forecast, Status, Weather } from "@/types";
 import { createSlice } from "@reduxjs/toolkit";
 import { getCurrentWeather, getForecast } from "./actions";
-
-type Status = {
-  LOADING: boolean;
-  SUCCESS: boolean;
-  FAILURE: boolean;
-};
+import { FAILURE, initialStatus, LOADING, SUCCESS } from "@/constants/status";
 
 interface StateProps {
   currentWeather: Weather | null;
@@ -15,18 +10,7 @@ interface StateProps {
     currentWeather: Status;
     forecast: Status;
   };
-  error: any;
 }
-
-const initialStatus: Status = {
-  LOADING: false,
-  SUCCESS: false,
-  FAILURE: false,
-};
-
-const LOADING: Status = { LOADING: true, SUCCESS: false, FAILURE: false };
-const SUCCESS: Status = { LOADING: false, SUCCESS: true, FAILURE: false };
-const FAILURE: Status = { LOADING: true, SUCCESS: false, FAILURE: true };
 
 const initialState: StateProps = {
   currentWeather: null,
@@ -35,7 +19,6 @@ const initialState: StateProps = {
     currentWeather: initialStatus,
     forecast: initialStatus,
   },
-  error: null,
 };
 
 const weatherSlice = createSlice({
@@ -53,7 +36,6 @@ const weatherSlice = createSlice({
       })
       .addCase(getCurrentWeather.rejected, (state, action) => {
         state.status.currentWeather = FAILURE;
-        state.error = action.payload;
       });
     builder
       .addCase(getForecast.pending, (state) => {
@@ -65,7 +47,6 @@ const weatherSlice = createSlice({
       })
       .addCase(getForecast.rejected, (state, action) => {
         state.status.forecast = FAILURE;
-        state.error = action.payload;
       });
   },
 });

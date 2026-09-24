@@ -1,14 +1,14 @@
 import { Dispatch, SetStateAction } from "react";
 
-export type Setting = {
-  title: SettingTitle;
-  options: { label: string }[];
-  selected: string;
+export type SettingsType = {
+  unit: UnitSetting[];
+  general: GeneralSetting[];
 };
 
-export type SettingsContextType = {
-  settings: Setting[];
-  setSettings: Dispatch<SetStateAction<Setting[]>>;
+export type GeneralSetting = {
+  title: SettingTitle;
+  description?: string;
+  value: boolean;
 };
 
 export type SettingTitle =
@@ -16,4 +16,17 @@ export type SettingTitle =
   | "WIND SPEED"
   | "PRESSURE"
   | "PRECIPITATION"
-  | "DISTANCE";
+  | "DISTANCE"
+  | "12 Hour Time"
+  | "Location";
+
+export type UnitSetting = {
+  title: SettingTitle;
+  options: { label: string }[];
+  selected: string;
+};
+
+export type SettingsContextType = {
+  settings: SettingsType;
+  setSettings: Dispatch<SetStateAction<SettingsType>>;
+};

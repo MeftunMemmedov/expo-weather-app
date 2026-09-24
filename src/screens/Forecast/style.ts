@@ -12,6 +12,13 @@ const { width } = Dimensions.get("screen");
 const isTablet = width >= 768;
 
 export const forecastStyles = StyleSheet.create({
+  infoContainer: {
+    flexDirection: "column",
+    alignItems: "center",
+    gap: 30,
+    paddingTop: 60,
+    paddingBottom: 60,
+  },
   //   today's forecast
   todaysForecastContainer: {
     width: "100%",

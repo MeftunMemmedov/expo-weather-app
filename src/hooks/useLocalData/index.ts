@@ -1,14 +1,16 @@
 import { CityData } from "@/types";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { CITIES_KEY } from "@/constants/storageKeys";
 
 const useLocalData = () => {
   const [citiesData, setCitiesData] = useState<CityData[]>([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+
   const getCities = async () => {
     try {
       setIsLoading(true);
-      const citiesStorage = await AsyncStorage.getItem("cities");
+      const citiesStorage = await AsyncStorage.getItem(CITIES_KEY);
 
       const cities = citiesStorage ? JSON.parse(citiesStorage) : [];
 
@@ -23,7 +25,7 @@ const useLocalData = () => {
   const addCity = async (cityData: CityData) => {
     setCitiesData((prevCities) => {
       const updated = [...prevCities, cityData];
-      AsyncStorage.setItem("cities", JSON.stringify(updated));
+      AsyncStorage.setItem(CITIES_KEY, JSON.stringify(updated));
       return updated;
     });
   };
@@ -34,7 +36,7 @@ const useLocalData = () => {
         (city) => city.lat !== lat || city.lon !== lon,
       );
 
-      AsyncStorage.setItem("cities", JSON.stringify(updatedCities));
+      AsyncStorage.setItem(CITIES_KEY, JSON.stringify(updatedCities));
       return updatedCities;
     });
   };

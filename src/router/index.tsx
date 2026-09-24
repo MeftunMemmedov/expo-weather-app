@@ -7,16 +7,7 @@ import { getCurrentWeather, getForecast } from "@/store/weather/actions";
 
 const AppRouter = () => {
   const dispatch = useAppDispatch();
-  const { currentCity, savedCities } = useAppSelector((store) => store.city);
-  const {
-    currentWeather,
-    forecast,
-    error,
-    status: {
-      currentWeather: { LOADING: isCurrentWeatherLoading },
-      forecast: { LOADING: isForecastLoading },
-    },
-  } = useAppSelector((store) => store.weather);
+  const { currentCity } = useAppSelector((store) => store.city);
 
   useEffect(() => {
     if (currentCity == null) {

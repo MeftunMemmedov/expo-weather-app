@@ -20,7 +20,7 @@ export const searchStyles = StyleSheet.create({
     borderRadius: 10,
     height: 45,
     paddingHorizontal: 10,
-    color:'white'
+    color: "white",
   },
   cancelSearchBtn: {
     width: "20%",
@@ -30,6 +30,11 @@ export const searchStyles = StyleSheet.create({
   },
   cancelSearchBtnText: { color: "white", fontWeight: "bold" },
   //   results
+  noResultsText: {
+    color: "white",
+    textAlign: "center",
+    fontWeight: "bold",
+  },
   searchResultList: {
     flexDirection: "column",
     gap: 20,

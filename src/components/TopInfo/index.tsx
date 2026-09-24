@@ -1,12 +1,13 @@
 import { secondary_text_color } from "@/constants/colors";
+import { SETTING_TEMPERATURE_KEY } from "@/constants/settingKeys";
 import { getFixedTemp } from "@/helpers/common";
 import { useSettings } from "@/hooks";
 import { useAppSelector } from "@/store/hooks";
 import { View, Text, Image, StyleSheet, Dimensions } from "react-native";
 
 const TopInfo = () => {
-  const { getSetting } = useSettings();
-  const tempSetting = getSetting("TEMPERATURE");
+  const { getUnitSetting } = useSettings();
+  const tempSetting = getUnitSetting(SETTING_TEMPERATURE_KEY);
 
   const { currentWeather: current } = useAppSelector((store) => store.weather);
   if (current == null) return null;

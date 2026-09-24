@@ -1,9 +1,10 @@
-import { View, Text, StyleSheet } from "react-native";
+import { View, Text } from "react-native";
+import { errorMessageStyles } from "./styles";
 
 const ErrorMessage = () => {
   return (
-    <View style={styles.errorMessageContainer}>
-      <Text style={styles.errorMessageText}>
+    <View style={errorMessageStyles.errorMessageContainer}>
+      <Text style={errorMessageStyles.errorMessageText}>
         An error occured. Please try again.
       </Text>
     </View>
@@ -11,13 +12,3 @@ const ErrorMessage = () => {
 };
 
 export default ErrorMessage;
-
-const styles = StyleSheet.create({
-  errorMessageContainer: {
-    paddingVertical: 200,
-  },
-  errorMessageText: {
-    textAlign: "center",
-    color: "red",
-  },
-});

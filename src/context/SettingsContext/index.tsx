@@ -1,4 +1,5 @@
-import { Setting, SettingsContextType } from "@/types";
+import { SETTINGS_KEY } from "@/constants/storageKeys";
+import { SettingsType, SettingsContextType } from "@/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createContext, ReactNode, useEffect, useState } from "react";
 
@@ -7,39 +8,50 @@ export const SettingsContext = createContext<SettingsContextType | undefined>(
 );
 
 const SettingsContextProvider = ({ children }: { children: ReactNode }) => {
-  const [settings, setSettings] = useState<Setting[]>([
-    {
-      title: "TEMPERATURE",
-      options: [{ label: "Celsius" }, { label: "Fahrenheit" }],
-      selected: "Celsius",
-    },
-    {
-      title: "WIND SPEED",
-      options: [{ label: "km/h" }, { label: "mph" }],
-      selected: "km/h",
-    },
-    {
-      title: "PRESSURE",
-      options: [{ label: "hPa" }, { label: "Inches" }],
-      selected: "hPa",
-    },
-    {
-      title: "PRECIPITATION",
-      options: [{ label: "Millmeters" }, { label: "Inches" }],
-      selected: "Inches",
-    },
-    {
-      title: "DISTANCE",
-      options: [{ label: "Kilometers" }, { label: "Miles" }],
-      selected: "Kilometers",
-    },
-  ]);
+  const [settings, setSettings] = useState<SettingsType>({
+    unit: [
+      {
+        title: "TEMPERATURE",
+        options: [{ label: "Celsius" }, { label: "Fahrenheit" }],
+        selected: "Celsius",
+      },
+      {
+        title: "WIND SPEED",
+        options: [{ label: "km/h" }, { label: "mph" }],
+        selected: "km/h",
+      },
+      {
+        title: "PRESSURE",
+        options: [{ label: "hPa" }, { label: "Inches" }],
+        selected: "hPa",
+      },
+      {
+        title: "PRECIPITATION",
+        options: [{ label: "Millmeters" }, { label: "Inches" }],
+        selected: "Inches",
+      },
+      {
+        title: "DISTANCE",
+        options: [{ label: "Kilometers" }, { label: "Miles" }],
+        selected: "Kilometers",
+      },
+    ],
+    general: [
+      { title: "12 Hour Time", value: false },
+      {
+        title: "Location",
+        description: " Get weather of your location",
+        value: false,
+      },
+    ],
+  });
 
   const getSavedSettings = async () => {
-    const localSavedSettings = await AsyncStorage.getItem("settings");
+    const localSavedSettings = await AsyncStorage.getItem(SETTINGS_KEY);
     const savedSettings = localSavedSettings
       ? JSON.parse(localSavedSettings)
-      : null;
+      : undefined;
+
     if (savedSettings) {
       setSettings(savedSettings);
     }

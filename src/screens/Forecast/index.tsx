@@ -1,6 +1,6 @@
 import Container from "@/components/Container";
 import TodaysForecast from "./sections/TodaysForecast";
-import { RefreshControl, View } from "react-native";
+import { View } from "react-native";
 import WeeklyForecast from "./sections/WeeklyForecast";
 import Airconditions from "./sections/AirConditions";
 import TopInfo from "@/components/TopInfo";
@@ -9,9 +9,10 @@ import LoadingSpinnner from "@/components/LoadingSpinner";
 import ErrorMessage from "@/components/ErrorMessage";
 import { useState } from "react";
 import { getCurrentWeather, getForecast } from "@/store/weather/actions";
+import ChooseLocationBy from "./components/ChoosLocationBy";
+import { forecastStyles } from "./style";
 
 const Forecast = () => {
-  const [isRefresing, setIsRefreshing] = useState<boolean>(false);
   const dispatch = useAppDispatch();
   const { currentCity } = useAppSelector((store) => store.city);
 
@@ -24,6 +25,8 @@ const Forecast = () => {
       forecast: { LOADING: isForecastLoading, FAILURE: isForecastFailed },
     },
   } = useAppSelector((store) => store.weather);
+
+  const [isRefresing, setIsRefreshing] = useState<boolean>(false);
 
   const handleRefresh = () => {
     if (currentCity === null) return;
@@ -40,6 +43,7 @@ const Forecast = () => {
 
   if (isCurrentWeatherLoading || isForecastLoading) return <LoadingSpinnner />;
   if (isCurrentWeatherFailed || isForecastFailed) return <ErrorMessage />;
+  if (currentCity === null) return <ChooseLocationBy />;
   return (
     <Container
       refreshing={isRefresing && (isCurrentWeatherLoading || isForecastLoading)}
@@ -47,15 +51,7 @@ const Forecast = () => {
       scroll
     >
       <TopInfo />
-      <View
-        style={{
-          flexDirection: "column",
-          alignItems: "center",
-          gap: 30,
-          paddingTop: 60,
-          paddingBottom: 60,
-        }}
-      >
+      <View style={forecastStyles.infoContainer}>
         <TodaysForecast />
         <WeeklyForecast />
         <Airconditions />

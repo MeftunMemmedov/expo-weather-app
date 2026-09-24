@@ -17,12 +17,12 @@ export const detectCity = async (): Promise<CityData | null> => {
     }
     const { latitude, longitude } = location.coords;
 
-    const geo = await Location.reverseGeocodeAsync({
-      latitude,
-      longitude,
-    });
+    // const geo = await Location.reverseGeocodeAsync({
+    //   latitude,
+    //   longitude,
+    // });
 
-    const place = geo[0];
+    // const place = geo[0];
 
     const { data } = await axiosInstance.get(`/search.json`, {
       params: { q: `${latitude},${longitude}` },

@@ -3,12 +3,13 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { createAsyncThunk } from "@reduxjs/toolkit";
 import { RootState } from "..";
 import { detectCity } from "@/helpers/cities";
+import { CITIES_KEY, CURRENT_CITY_KEY } from "@/constants/storageKeys";
 
 export const getCitiesFromStorage = createAsyncThunk(
   "city/getCitiesFromStorage",
   async () => {
-    const localCurrentCity = await AsyncStorage.getItem("currentCity");
-    const localCityList = await AsyncStorage.getItem("cities");
+    const localCurrentCity = await AsyncStorage.getItem(CURRENT_CITY_KEY);
+    const localCityList = await AsyncStorage.getItem(CITIES_KEY);
 
     let currentCity = localCurrentCity ? JSON.parse(localCurrentCity) : null;
     let savedCities = localCityList ? JSON.parse(localCityList) : [];
@@ -19,8 +20,8 @@ export const getCitiesFromStorage = createAsyncThunk(
         currentCity = locatedCity;
         savedCities = [locatedCity];
       }
-      await AsyncStorage.setItem("currentCity", JSON.stringify(currentCity));
-      await AsyncStorage.setItem("cities", JSON.stringify(savedCities));
+      await AsyncStorage.setItem(CURRENT_CITY_KEY, JSON.stringify(currentCity));
+      await AsyncStorage.setItem(CITIES_KEY, JSON.stringify(savedCities));
     }
     return {
       currentCity,
@@ -37,7 +38,7 @@ export const addCityToStorage = createAsyncThunk<
   const { savedCities } = getState().city;
 
   const updatedCities = [...savedCities, newCity];
-  await AsyncStorage.setItem("cities", JSON.stringify(updatedCities));
+  await AsyncStorage.setItem(CITIES_KEY, JSON.stringify(updatedCities));
 
   return updatedCities;
 });
@@ -50,7 +51,7 @@ export const removeCityFromStorage = createAsyncThunk<
   const { savedCities } = getState().city;
 
   const updatedCities = savedCities.filter((city) => city.id !== newCity.id);
-  await AsyncStorage.setItem("cities", JSON.stringify(updatedCities));
+  await AsyncStorage.setItem(CITIES_KEY, JSON.stringify(updatedCities));
 
   return updatedCities;
 });
@@ -58,7 +59,7 @@ export const removeCityFromStorage = createAsyncThunk<
 export const setCurrentCity = createAsyncThunk(
   "city/setCurrentCity",
   async (city: CityData) => {
-    await AsyncStorage.setItem("currentCity", JSON.stringify(city));
+    await AsyncStorage.setItem(CURRENT_CITY_KEY, JSON.stringify(city));
 
     return city;
   },

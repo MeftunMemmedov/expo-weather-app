@@ -4,3 +4,4 @@ export type * from "./settings";
 export type * from "./location";
 export type * from "./weather";
 export type * from "./forecast";
+export type * from "./status";

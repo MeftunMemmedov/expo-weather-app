@@ -10,12 +10,14 @@ interface CityState {
   currentCity: CityData | null;
   savedCities: CityData[];
   isLoading: boolean;
+  isFailed: boolean;
 }
 
 const initialState: CityState = {
   currentCity: null,
   savedCities: [],
   isLoading: false,
+  isFailed: false,
 };
 
 const citySlice = createSlice({
@@ -26,11 +28,16 @@ const citySlice = createSlice({
     builder
       .addCase(getCitiesFromStorage.pending, (state) => {
         state.isLoading = true;
+        state.isFailed = false;
       })
       .addCase(getCitiesFromStorage.fulfilled, (state, { payload }) => {
         state.currentCity = payload.currentCity;
         state.savedCities = payload.savedCities;
         state.isLoading = false;
+      })
+      .addCase(getCitiesFromStorage.rejected, (state) => {
+        state.isLoading = false;
+        state.isFailed = true;
       });
     builder.addCase(addCityToStorage.fulfilled, (state, { payload }) => {
       state.savedCities = payload;

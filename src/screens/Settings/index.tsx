@@ -8,8 +8,9 @@ import {
   secondary_color,
   secondary_text_color,
 } from "@/constants/colors";
-import { SettingTitle } from "@/types";
+import { GeneralSetting, SettingTitle, UnitSetting } from "@/types";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { SETTINGS_KEY } from "@/constants/storageKeys";
 
 const Settings = () => {
   const context = use(SettingsContext);
@@ -17,17 +18,43 @@ const Settings = () => {
   if (!context) return null;
   const { settings, setSettings } = context;
 
-  const handleSetting = async (title: SettingTitle, label: string) => {
-    const updatedSettings = settings.map((setting) => {
-      if (setting.title === title) {
-        return { ...setting, title, selected: label };
-      }
-      return setting;
-    });
-    setSettings(updatedSettings);
-    // await AsyncStorage.setItem("settings", JSON.stringify(updatedSettings));
+  const handleSetting = async (
+    type: "G" | "U",
+    title: SettingTitle,
+    label?: string,
+  ) => {
+    if (type === "U") {
+      const updatedUnitSettings = settings.unit.map((setting) => {
+        if (setting.title === title) {
+          return { ...setting, title, selected: label };
+        }
+        return setting;
+      }) as UnitSetting[];
+
+      setSettings((prevSettings) => ({
+        ...prevSettings,
+        unit: updatedUnitSettings,
+      }));
+    } else if (type === "G") {
+      const updatedGeneralSettings = settings.general.map((setting) => {
+        if (setting.title === title) {
+          return { ...setting, value: !setting.value };
+        }
+        return setting;
+      }) as GeneralSetting[];
+      setSettings((prevSettings) => ({
+        ...prevSettings,
+        general: updatedGeneralSettings,
+      }));
+    }
   };
 
+  useEffect(() => {
+    const updateSettingStorage = async () => {
+      await AsyncStorage.setItem(SETTINGS_KEY, JSON.stringify(settings));
+    };
+    updateSettingStorage();
+  }, [settings]);
   return (
     <Container scroll>
       {/* <Text style={{ color: "white" }}>{JSON.stringify(settings)}</Text> */}
@@ -35,7 +62,7 @@ const Settings = () => {
 
       <Text style={settingStyles.unitText}>Units</Text>
       <View style={settingStyles.allsettingsContainer}>
-        {settings.map((setting, index) => (
+        {settings.unit.map((setting, index) => (
           <View
             key={`setting-${setting.title}-${index}`}
             style={settingStyles.settingsContainer}
@@ -47,7 +74,9 @@ const Settings = () => {
                   key={`setting-${setting.title}-${option.label}$-${i}`}
                 >
                   <Pressable
-                    onPress={() => handleSetting(setting.title, option.label)}
+                    onPress={() =>
+                      handleSetting("U", setting.title, option.label)
+                    }
                     style={[
                       settingStyles.settingsSwitchBtn,
                       {
@@ -83,7 +112,7 @@ const Settings = () => {
           </View>
         ))}
       </View>
-      <View style={[settingStyles.otherSettingsContainer, { marginTop: 40 }]}>
+      {/* <View style={[settingStyles.otherSettingsContainer, { marginTop: 40 }]}>
         <Text style={settingStyles.otherSettingsTitle}>Notifications</Text>
         <View style={settingStyles.otherSettingsBox}>
           <View style={settingStyles.otherSettingsInnerContainer}>
@@ -101,49 +130,40 @@ const Settings = () => {
             />
           </View>
         </View>
-      </View>
+      </View> */}
       <View style={settingStyles.otherSettingsContainer}>
         <Text style={settingStyles.otherSettingsTitle}>General</Text>
         <View style={settingStyles.otherSettingsBox}>
-          <View
-            style={[
-              settingStyles.otherSettingsInnerContainer,
-              {
-                marginBottom: 20,
-              },
-            ]}
-          >
-            <View style={settingStyles.innerBox}>
-              <Text style={settingStyles.otherSettingsInnerBoxTitle}>
-                12-Hour Time
-              </Text>
+          {settings.general.map((setting, index) => (
+            <View
+              key={`gnrl-sttng-${index}`}
+              style={[
+                settingStyles.otherSettingsInnerContainer,
+                {
+                  marginBottom: 20,
+                },
+              ]}
+            >
+              <View style={settingStyles.innerBox}>
+                <Text style={settingStyles.otherSettingsInnerBoxTitle}>
+                  {setting.title}
+                </Text>
+                {setting.description && (
+                  <Text style={settingStyles.otherSettingsInnerBoxSubtitle}>
+                    {setting.description}
+                  </Text>
+                )}
+              </View>
+              <Switch
+                onValueChange={() => {
+                  handleSetting("G", setting.title);
+                }}
+                value={setting.value}
+                trackColor={{ true: main_blue, false: main_blue }}
+                style={settingStyles.otherSettingsSwitch}
+              />
             </View>
-            <Switch
-              trackColor={{ true: main_blue, false: main_blue }}
-              style={settingStyles.otherSettingsSwitch}
-            />
-          </View>
-          <View
-            style={[
-              settingStyles.otherSettingsInnerContainer,
-              {
-                marginBottom: 20,
-              },
-            ]}
-          >
-            <View style={settingStyles.innerBox}>
-              <Text style={settingStyles.otherSettingsInnerBoxTitle}>
-                Location
-              </Text>
-              <Text style={settingStyles.otherSettingsInnerBoxSubtitle}>
-                Get weather of your location
-              </Text>
-            </View>
-            <Switch
-              trackColor={{ true: main_blue, false: main_blue }}
-              style={settingStyles.otherSettingsSwitch}
-            />
-          </View>
+          ))}
         </View>
       </View>
     </Container>

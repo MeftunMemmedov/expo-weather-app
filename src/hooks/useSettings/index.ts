@@ -1,18 +1,30 @@
 import { SettingsContext } from "@/context/SettingsContext";
-import { Setting, SettingTitle } from "@/types";
+import { GeneralSetting, SettingTitle, UnitSetting } from "@/types";
 import { use } from "react";
 
-const useSettings = (): { getSetting: (title: SettingTitle) => Setting } => {
+const useSettings = (): {
+  getUnitSetting: (title: SettingTitle) => UnitSetting | undefined;
+  getGeneralSetting: (title: SettingTitle) => GeneralSetting | undefined;
+} => {
   const context = use(SettingsContext);
-  if (!context) throw Error("CONTEXT FUCKED UP");
+
+  if (!context) throw Error("SETTINGS CONTEXT ERROR OCCURED");
 
   const { settings } = context;
-  const getSetting = (title: SettingTitle): Setting => {
-    return settings.find((setting) => setting.title === title) as Setting;
+
+  const getUnitSetting = (title: SettingTitle): UnitSetting | undefined => {
+    return settings.unit.find((setting) => setting.title === title);
+  };
+
+  const getGeneralSetting = (
+    title: SettingTitle,
+  ): GeneralSetting | undefined => {
+    return settings.general.find((setting) => setting.title === title);
   };
 
   return {
-    getSetting,
+    getUnitSetting,
+    getGeneralSetting,
   };
 };
 

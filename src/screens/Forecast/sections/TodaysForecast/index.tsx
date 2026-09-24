@@ -5,20 +5,24 @@ import { format } from "date-fns";
 import { getFixedTemp } from "@/helpers/common";
 import { useAppSelector } from "@/store/hooks";
 import { useSettings } from "@/hooks";
+import { SETTING_TEMPERATURE_KEY } from "@/constants/settingKeys";
 
 const TodaysForecast = () => {
   const { forecast } = useAppSelector((store) => store.weather);
 
-  const { getSetting } = useSettings();
+  const { getUnitSetting, getGeneralSetting } = useSettings();
 
-  const tempSetting = getSetting("TEMPERATURE");
+  const tempSetting = getUnitSetting(SETTING_TEMPERATURE_KEY);
+  const is12Hours = getGeneralSetting("12 Hour Time");
 
-  if (forecast == null) return null;
+  if (forecast === null) return;
+
   const now = forecast.location.localtime_epoch;
   const todaysForecast = forecast.forecast.forecastday[0].hour
     .filter((h) => h.time_epoch >= now)
     .slice(0, 3);
 
+  if (todaysForecast.length === 0) return null;
   return (
     <View style={forecastStyles.todaysForecastContainer}>
       <View style={forecastStyles.todaysForecastTitleContainer}>
@@ -35,7 +39,7 @@ const TodaysForecast = () => {
               style={[forecastStyles.singleForecast]}
             >
               <Text style={forecastStyles.singleForecastTime}>
-                {format(forecast.time, "HH:mm")}
+                {format(forecast.time, is12Hours ? "h:mm a" : "HH:mm")}
               </Text>
               <View style={forecastStyles.singleForecastWeatherIconBox}>
                 <Image

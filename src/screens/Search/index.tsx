@@ -84,15 +84,7 @@ const Search = ({ navigation }: NativeStackScreenProps<RootStackParamList>) => {
           </View>
         ) : debouncedVal !== "" && searchResults.length == 0 ? (
           <View>
-            <Text
-              style={{
-                color: "white",
-                textAlign: "center",
-                fontWeight: "bold",
-              }}
-            >
-              No Results
-            </Text>
+            <Text style={searchStyles.noResultsText}>No Results</Text>
           </View>
         ) : (
           searchResults.map((result, index) => {
