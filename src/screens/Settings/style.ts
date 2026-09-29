@@ -58,7 +58,7 @@ export const settingStyles = StyleSheet.create({
   },
   // othersettings
   otherSettingsContainer: {
-    marginBottom: 40,
+    marginVertical: 40,
   },
   otherSettingsTitle: {
     color: primary_text_color,

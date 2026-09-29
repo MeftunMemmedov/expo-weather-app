@@ -1,4 +1,4 @@
-import { View, Text, Pressable } from "react-native";
+import { View, Text, Pressable, Alert, Linking } from "react-native";
 import Container from "@/components/Container";
 import { chooseLocationByStyles } from "./style";
 import AntDesign from "@expo/vector-icons/AntDesign";
@@ -12,24 +12,37 @@ const ChooseLocationBy = () => {
   const nav = useNavigation<NavigationProp<BottomTabParamList>>();
 
   const dispatch = useAppDispatch();
+
+  const handleLocationDetect = async () => {
+    const res = await dispatch(getCitiesFromStorage()).unwrap();
+
+    if (!res.currentCity) {
+      Alert.alert(
+        "Location error",
+        "Could not detect location. Please check your location permissions in settings.",
+        [
+          { text: "Cancel", style: "cancel" },
+          { text: "Open settings", onPress: () => Linking.openSettings() },
+        ],
+      );
+    }
+  };
   return (
     <Container scroll={false}>
       <View style={{ height: "100%" }}>
         <View style={chooseLocationByStyles.btnContainer}>
-          <Pressable style={[{ marginBottom: 10 }, chooseLocationByStyles.btn]}>
-            <Text
-              style={chooseLocationByStyles.btnText}
-              onPress={() => nav.navigate("CityStack")}
-            >
+          <Pressable
+            style={[{ marginBottom: 10 }, chooseLocationByStyles.btn]}
+            onPress={() => nav.navigate("CityStack")}
+          >
+            <Text style={chooseLocationByStyles.btnText}>
               Search and select location
             </Text>
             <AntDesign name="search" size={24} color="black" />
           </Pressable>
           <Pressable
             style={chooseLocationByStyles.btn}
-            onPress={() => {
-              dispatch(getCitiesFromStorage());
-            }}
+            onPress={handleLocationDetect}
           >
             <Text style={chooseLocationByStyles.btnText}>
               Turn on location detection

@@ -159,7 +159,7 @@ const Settings = () => {
                   handleSetting("G", setting.title);
                 }}
                 value={setting.value}
-                trackColor={{ true: main_blue, false: main_blue }}
+                trackColor={{ true: main_blue, false: 'gray' }}
                 style={settingStyles.otherSettingsSwitch}
               />
             </View>

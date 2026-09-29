@@ -1,5 +1,5 @@
 import { CityData } from "@/types";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { CITIES_KEY } from "@/constants/storageKeys";
 
@@ -16,7 +16,7 @@ const useLocalData = () => {
 
       setCitiesData(cities);
     } catch (error) {
-      console.log("localstorage error", error);
+      console.error("AN ERRO OCCURED WHILE GETTING CITIES", error);
     } finally {
       setIsLoading(false);
     }

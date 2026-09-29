@@ -28,7 +28,7 @@ export const detectCity = async (): Promise<CityData | null> => {
       params: { q: `${latitude},${longitude}` },
     });
 
-    return data[0];
+    return data && data.length > 0 ? data[0] : null;
   } catch {
     return null;
   }

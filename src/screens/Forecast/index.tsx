@@ -14,7 +14,9 @@ import { forecastStyles } from "./style";
 
 const Forecast = () => {
   const dispatch = useAppDispatch();
-  const { currentCity } = useAppSelector((store) => store.city);
+  const { currentCity, isLoading: isCurrentCityLoading } = useAppSelector(
+    (store) => store.city,
+  );
 
   const {
     status: {
@@ -43,7 +45,8 @@ const Forecast = () => {
 
   if (isCurrentWeatherLoading || isForecastLoading) return <LoadingSpinnner />;
   if (isCurrentWeatherFailed || isForecastFailed) return <ErrorMessage />;
-  if (currentCity === null) return <ChooseLocationBy />;
+  if (currentCity === null && !isCurrentCityLoading)
+    return <ChooseLocationBy />;
   return (
     <Container
       refreshing={isRefresing && (isCurrentWeatherLoading || isForecastLoading)}

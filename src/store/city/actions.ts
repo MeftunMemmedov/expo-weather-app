@@ -18,7 +18,13 @@ export const getCitiesFromStorage = createAsyncThunk(
       const locatedCity = await detectCity();
       if (locatedCity) {
         currentCity = locatedCity;
-        savedCities = [locatedCity];
+
+        const isCityAlreadySaved = savedCities.some(
+          (c: CityData) => c.id === locatedCity.id,
+        );
+        if (!isCityAlreadySaved) {
+          savedCities = [locatedCity, ...savedCities];
+        }
       }
       await AsyncStorage.setItem(CURRENT_CITY_KEY, JSON.stringify(currentCity));
       await AsyncStorage.setItem(CITIES_KEY, JSON.stringify(savedCities));

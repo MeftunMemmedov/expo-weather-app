@@ -13,7 +13,7 @@ const TodaysForecast = () => {
   const { getUnitSetting, getGeneralSetting } = useSettings();
 
   const tempSetting = getUnitSetting(SETTING_TEMPERATURE_KEY);
-  const is12Hours = getGeneralSetting("12 Hour Time");
+  const is12Hours = getGeneralSetting("12 Hour Time")?.value;
 
   if (forecast === null) return;
 
@@ -21,6 +21,7 @@ const TodaysForecast = () => {
   const todaysForecast = forecast.forecast.forecastday[0].hour
     .filter((h) => h.time_epoch >= now)
     .slice(0, 3);
+
 
   if (todaysForecast.length === 0) return null;
   return (
@@ -30,38 +31,30 @@ const TodaysForecast = () => {
       </View>
       <View style={forecastStyles.todaysForecastRow}>
         {todaysForecast.map((forecast, index) => (
-          <Fragment key={`todays-forecast-${forecast.time}-${index}`}>
-            {index === 1 && (
-              <View style={forecastStyles.singleForecastLine}></View>
-            )}
-            <View
-              key={`forecast-todays-${index}`}
-              style={[forecastStyles.singleForecast]}
-            >
-              <Text style={forecastStyles.singleForecastTime}>
-                {format(forecast.time, is12Hours ? "h:mm a" : "HH:mm")}
-              </Text>
-              <View style={forecastStyles.singleForecastWeatherIconBox}>
-                <Image
-                  source={{ uri: `https:${forecast.condition.icon}` }}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    aspectRatio: "16/10",
-                    objectFit: "contain",
-                  }}
-                />
-              </View>
-              <Text style={forecastStyles.singleForecastDegree}>
-                {tempSetting?.selected === "Celsius"
-                  ? getFixedTemp(forecast.temp_c)
-                  : getFixedTemp(forecast.temp_f)}
-              </Text>
+          <View
+            key={`forecast-todays-${index}`}
+            style={[forecastStyles.singleForecast]}
+          >
+            <Text style={forecastStyles.singleForecastTime}>
+              {format(forecast.time, is12Hours ? "h:mm a" : "HH:mm")}
+            </Text>
+            <View style={forecastStyles.singleForecastWeatherIconBox}>
+              <Image
+                source={{ uri: `https:${forecast.condition.icon}` }}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  aspectRatio: "16/10",
+                  objectFit: "contain",
+                }}
+              />
             </View>
-            {index === 1 && (
-              <View style={forecastStyles.singleForecastLine}></View>
-            )}
-          </Fragment>
+            <Text style={forecastStyles.singleForecastDegree}>
+              {tempSetting?.selected === "Celsius"
+                ? getFixedTemp(forecast.temp_c)
+                : getFixedTemp(forecast.temp_f)}
+            </Text>
+          </View>
         ))}
       </View>
     </View>

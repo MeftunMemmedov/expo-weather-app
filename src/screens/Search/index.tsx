@@ -31,12 +31,13 @@ const Search = ({ navigation }: NativeStackScreenProps<RootStackParamList>) => {
     if (searchInput === "") return;
     try {
       setIsLoading(true);
+      setError("");
       const { data } = await axiosInstance.get(`/search.json`, {
         params: { q: debouncedVal },
       });
       setSearchResults(data);
     } catch (error) {
-      console.log(error);
+      console.error("AN ERROR OCCURED WHILE SEARCHING CITY", error);
       setError("An error occured. Please try again");
     } finally {
       setIsLoading(false);
@@ -51,7 +52,12 @@ const Search = ({ navigation }: NativeStackScreenProps<RootStackParamList>) => {
   }, [searchInput]);
 
   useEffect(() => {
-    if (debouncedVal !== "") getSearchResults();
+    if (debouncedVal !== "") {
+      getSearchResults();
+    } else {
+      setSearchResults([]);
+      setError("");
+    }
   }, [debouncedVal]);
 
   return (
@@ -77,11 +83,13 @@ const Search = ({ navigation }: NativeStackScreenProps<RootStackParamList>) => {
         </Pressable>
       </View>
       <View style={searchStyles.searchResultList}>
-        {error && <ErrorMessage />}
+        {/* {error &&} */}
         {isLoading ? (
           <View>
             <ActivityIndicator size={100} color={primary_text_color} />
           </View>
+        ) : error ? (
+          <ErrorMessage />
         ) : debouncedVal !== "" && searchResults.length == 0 ? (
           <View>
             <Text style={searchStyles.noResultsText}>No Results</Text>
