@@ -22,7 +22,6 @@ const TodaysForecast = () => {
     .filter((h) => h.time_epoch >= now)
     .slice(0, 3);
 
-
   if (todaysForecast.length === 0) return null;
   return (
     <View style={forecastStyles.todaysForecastContainer}>
@@ -41,12 +40,7 @@ const TodaysForecast = () => {
             <View style={forecastStyles.singleForecastWeatherIconBox}>
               <Image
                 source={{ uri: `https:${forecast.condition.icon}` }}
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  aspectRatio: "16/10",
-                  objectFit: "contain",
-                }}
+                style={forecastStyles.icon}
               />
             </View>
             <Text style={forecastStyles.singleForecastDegree}>

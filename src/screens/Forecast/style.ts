@@ -174,4 +174,10 @@ export const forecastStyles = StyleSheet.create({
     fontWeight: "bold",
     color: primary_text_color,
   },
+  icon: {
+    width: "100%",
+    height: "100%",
+    aspectRatio: "16/10",
+    objectFit: "contain",
+  },
 });

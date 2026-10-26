@@ -41,12 +41,7 @@ const WeeklyForecast = () => {
               <View style={forecastStyles.singleWeeklyForecastWeatherIconBox}>
                 <Image
                   source={{ uri: `https:${forecast.day.condition.icon}` }}
-                  style={{
-                    width: "100%",
-                    height: "100%",
-                    aspectRatio: "16/10",
-                    objectFit: "contain",
-                  }}
+                  style={forecastStyles.icon}
                 />
               </View>
               <Text

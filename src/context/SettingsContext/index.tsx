@@ -38,11 +38,11 @@ const SettingsContextProvider = ({ children }: { children: ReactNode }) => {
     ],
     general: [
       { title: "12 Hour Time", value: false },
-      {
-        title: "Location",
-        description: " Get weather of your location",
-        value: false,
-      },
+      // {
+      //   title: "Location",
+      //   description: "Get weather of your location",
+      //   value: false,
+      // },
     ],
   });
 
